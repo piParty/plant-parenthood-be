@@ -35,7 +35,7 @@ Database
 -verification happens (ensureUserAuth) to get the user to the page on the front end where the user can define the parameters of the pi data session 
 -user fills out form data for the session --> .post to the Heroku server (verify-session route) --> server sends back Token to the front end
 -Token is sent from user front end computer to the raspberry pi directly via SSH command (shell command)
--Raspberry pi will use the token--> pulls info out of the token (id of session) --> uses this info to make the post to Heroku server via HTTP request (Python script)
+-Raspberry pi will use the token --> pulls info out of the token (id of session), verify that token was signed by our server --> uses this info to make the post to Heroku server via HTTP request (Python script)
 
 -always a new token with every session!
 
