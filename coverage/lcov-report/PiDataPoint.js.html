@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title>Code coverage report for Plant.js</title>
+    <title>Code coverage report for PiDataPoint.js</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="prettify.css" />
     <link rel="stylesheet" href="base.css" />
@@ -16,7 +16,7 @@
 <div class='wrapper'>
   <div class='pad1'>
     <h1>
-      <a href="index.html">All files</a> Plant.js
+      <a href="index.html">All files</a> PiDataPoint.js
     </h1>
     <div class='clearfix'>
     </div>
@@ -49,11 +49,9 @@
 <a name='L21'></a><a href='#L21'>21</a>
 <a name='L22'></a><a href='#L22'>22</a>
 <a name='L23'></a><a href='#L23'>23</a>
-<a name='L24'></a><a href='#L24'>24</a>
-<a name='L25'></a><a href='#L25'>25</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L24'></a><a href='#L24'>24</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -77,27 +75,26 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const mongoose = require('mongoose');
 &nbsp;
 const schema = new mongoose.Schema({
-  commonName: {
-    type: String, 
-    required: true
-  }, 
-  scientificName: {
-    family: String, 
-    genus: String, 
-    species: String
-  }, 
-  waterPreference: {
-    type: String, 
+  piDataSessionId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'PiDataSession', 
     required: true
   },
-  sunlightPreference: {
-    type: String, 
-    required: true, 
-    enum: ['low', 'medium', 'high']
+  averageValue: {
+    type: Number, 
+    required: true
+  }, 
+  standardDeviation: {
+    type: Number, 
+    required: true
+  }, 
+  piTimestamp: {
+    type: Date, 
+    required: true
   }
 });
 &nbsp;
-module.exports = mongoose.model('Plant', schema);
+module.exports = mongoose.model('PiDataPoint', schema);
 &nbsp;</pre></td></tr>
 </table></pre>
 <div class='push'></div><!-- for sticky footer -->
