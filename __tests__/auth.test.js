@@ -22,14 +22,12 @@ describe('app routes', () => {
   });
 
   it('can login a user with email and password', async() => {
-
     const user = await getUser();
-
     return request(app)
       .post('/api/v1/auth/login')
       .send({ email: 'user@tess.com', password: 'password' })
       .then(res => {
-        // expect(res.header['set-cookie'][0]).toEqual(expect.stringContaining('session='));
+        expect(res.header['set-cookie'][0]).toEqual(expect.stringContaining('session='));
         expect(res.body).toEqual({
           _id: user._id,
           email: 'user@tess.com',
@@ -42,7 +40,6 @@ describe('app routes', () => {
 
   it('fails to login a user with a bad email', async() => {
     await getUser();
-
     return request(app)
       .post('/api/v1/auth/login')
       .send({ email: 'badEmail@notgood.io', password: 'password' })
@@ -57,7 +54,6 @@ describe('app routes', () => {
 
   it('fails to login a user with a bad password', async() => {
     await getUser();
-
     return request(app)
       .post('/api/v1/auth/login')
       .send({ email: 'user@tess.com', password: 'notright' })
