@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const { getUser, userAgent } = require('../lib/helpers/data-helpers');
+const { getUser, userAgent, adminAgent } = require('../lib/helpers/data-helpers');
 const request = require('supertest');
 const app = require('../lib/app');
 
@@ -89,6 +89,30 @@ describe('app routes', () => {
           __v: 0
         });
       });
+  });
 
+  it('should throw an error when a user tries to delete a user', async() => {
+    const deleteMe = await getUser();
+    return userAgent
+      .delete(`/api/v1/auth/${deleteMe._id}`)
+      .then(res => {
+        expect(res.status).toEqual(403);
+        expect(res.body.message).toEqual('Admin role required to delete a user.');
+      });
+  });
+
+  it('should only allow an admin to delete a user', async() => {
+    const deleteMe = await getUser();
+    return adminAgent
+      .delete(`/api/v1/auth/${deleteMe._id}`)
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: deleteMe._id,
+          email: 'user@tess.com',
+          role: 'user',
+          myPis: [],
+          __v: 0
+        });
+      });
   });
 });
