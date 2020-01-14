@@ -6,7 +6,7 @@ Tess Lameyer, Lisa Carpenter, Ian Andrewson, Alan Hermanns, Ben Beekman
 ## TECH STACK:
 
 - Frameworks
-- Node.js
+Node.js
 - Python
 
 ###Database
