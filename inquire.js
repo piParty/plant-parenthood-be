@@ -1,5 +1,7 @@
 const inquirer = require('inquirer');
-
+const User = require('./lib/models/User');
+const PiDataSession = require('./lib/models/PiDataSession');
+const superagent = require(superagent);
 inquirer
   .prompt([
     {
@@ -26,12 +28,44 @@ inquirer
       message : 'what is your pi\'s IP Address?'
     },
     {
+      name: 'nickName',
+      message: 'Give your Pi a nick name. This will be used for authentication purposes.'
+    },
+    {
       type: 'checkbox',
       name: 'sensors',
       message: 'Select sensors you have attached to your Pi and want to use.',
       choices:['light', 'temperature/humidity', 'light-hdr']
+    },
+    {
+      name : 'piLocationInHouse',
+      message: 'Where is the Pi in your house? This has nothing to do with the security of your Pi.'
+    },
+    {
+      name: 'city',
+      message: 'What city is your Pi in?'
+    },
+    {
+      name: 'appUserName',
+      message:'Please enter your login credentials, email:'
+    },
+    {
+      type: 'password',
+      name: 'appPassword',
+      message: 'Password:'
     }])
-  .then(answers => {
+  .then(async answers => {
+    const newUser = await superagent('<signup route>', { 
+      email: answers.email,  
+      password: answers.password, 
+      role: 'user' 
+    });
+    const dataSesssion = await superagent('<pidatasessions route>', {
+      piNickname: answers.nickName, 
+      sensorType: answers.sensors,
+      piLocationInHouse: answers.piLocationInHouse,
+      city: answers.city
+    });
     console.info('ooooooOh!', `So, I hope you know what you're getting yourself into, because we won't tell you, but... We'd like to get this Pi party started, so...
     please, find it in your heart to enter the following into the command line after we end this line of inquiry.
     It might give you a disconcerting message. Just enter yes.
