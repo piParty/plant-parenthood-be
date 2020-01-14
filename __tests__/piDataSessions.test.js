@@ -95,12 +95,12 @@ describe('piDataSession route tests', () => {
       city: 'Portland, Oregon'
     });
     return request(app)
-      .post(`/api/v1/piDataSessions/${session._id}`)
+      .patch(`/api/v1/piDataSessions/${session._id}`)
       .send({ sensorType: 'Gamma Ray' })
       .then(res => {
         expect(res.body).toEqual({
           _id: session._id.toString(),
-          piNickname: 'test',
+          piNickname: 'testPi',
           sensorType: 'Gamma Ray',
           piLocationInHouse: 'living room, east wall',
           city: 'Portland, Oregon',
@@ -124,7 +124,8 @@ describe('piDataSession route tests', () => {
           piNickname: 'testPi',
           sensorType: 'light',
           piLocationInHouse: 'living room, east wall',
-          city: 'Portland, Oregon'
+          city: 'Portland, Oregon',
+          __v: 0
         });
       });
   });
