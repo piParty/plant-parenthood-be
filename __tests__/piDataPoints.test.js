@@ -6,7 +6,7 @@ const app = require('../lib/app');
 
 
 describe('app routes', () => {
-  it('should be able to verify a session and post a data point', async() => {
+  it('should be able to verify a session and post a data point', () => {
     return request(app)
       .post('/dataPoints', {
         averageValue: 4,
