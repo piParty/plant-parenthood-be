@@ -38,7 +38,7 @@ inquirer
     Then after you enter your password enter the ssh command again.
     ssh ${answers.userName}@${answers.IPAddress} ,
     then enter
-    '<link to github python script here>'
+    '< scp link to github python script here ./downloads>'
     then enter,
     '<command to run python script>'
      `);
