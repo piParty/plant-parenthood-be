@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const { getUser } = require('../lib/helpers/data-helpers');
+const { getUser, userAgent } = require('../lib/helpers/data-helpers');
 const request = require('supertest');
 const app = require('../lib/app');
 
@@ -67,4 +67,12 @@ describe('app routes', () => {
       });
   });
 
+  it('should log out a user', async() => {
+    return await userAgent
+      .post('/api/v1/auth/logout')
+      .then(res => {
+        console.log(res.header);
+        expect(res.header['set-cookie'][0]).toEqual(expect.stringContaining('session=;'));
+      });
+  });
 });
