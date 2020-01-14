@@ -39,13 +39,11 @@ We tested two different light sensors. The Adafruit TSL-2591 requires a bit more
 - Type `sudo raspi-config` into the terminal, then navigate to `Network Options: Hostname`.
 - Enter a new name that VNC Server will use to connect to the Pi.
 - If you're using an Adafruit TSL-2591, you should then navigate to `Interface Options`, then `I2C` and enable I2C and restart the device (if you aren't prompted to do so, use `sudo reboot`).
-- Type `vncserver` and hit return.
+- Exit the Raspberry Config menu, then type `vncserver` and hit return.
 - The command should respond with a number of details relating to the connection, including a VNC Server catchphrase which will help you ensure you're connecting to the right device, and a phrase "New desktop is `hostname:1` (where hostname is whatever you set earlier) followed by an ip address.
 - On your computer, download and install VNC Client, and open the application.
 In the address bar of VNC viewer, type the `hostname:1` string that your raspberry pi responded with, and connect.
-- You'll be prompted for your username and password, then you'll connect remotely to the device.
-
-
+- You'll be prompted for your username and password, then connect remotely to the device.
 
 -multiple pis/user ? 
 
