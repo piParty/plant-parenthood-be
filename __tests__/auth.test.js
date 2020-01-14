@@ -78,14 +78,15 @@ describe('app routes', () => {
   it('can patch a user', async() => {
     const user = await getUser();
     return request(app)
-      .patch(`/api/v1/auth/${user.id}`)
-      .send({ password: 'notPasswordAnymore', myPi: { piNickname: 'MyFirstPi'} })
+      .patch(`/api/v1/auth/${user._id}`)
+      .send({ password: 'notPasswordAnymore', myPis: { piNickname: 'MyFirstPi' } })
       .then(res => {
         expect(res.body).toEqual({
           _id: user._id.toString(),
           email: 'user@tess.com',
           role: 'user',
-          myPis: [{ piNickname: 'MyFirstPi' }]
+          myPis: [{ _id: expect.any(String), piNickname: 'MyFirstPi' }],
+          __v: 0
         });
       });
 
