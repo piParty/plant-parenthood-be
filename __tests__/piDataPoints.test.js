@@ -14,13 +14,11 @@ describe('app routes', () => {
         piTimestamp: Date.now()
       })
       .then(res => {
+        expect(res.status).toEqual(404);
         expect(res.body).toEqual({
-          __v: 0,
-          averageValue: 4,
-          standardDeviation: 1,
-          piTimestamp: res.piTimestamp
+          status: 404,
+          message: 'Not Found'
         });
       });
-  
   });
 });
