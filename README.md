@@ -12,10 +12,7 @@ Database
 - Mongoose/MongoDB on Heroku server
 
 
-
 ## HARDWARE: 
-
-
 
 
 ## Python: virtual environment, venv --> PIP needs its virutal environment to run; PyTest is a test environment for python 
