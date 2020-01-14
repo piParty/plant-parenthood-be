@@ -30,8 +30,7 @@ describe('piDataSession route tests', () => {
         city: 'Portland, Oregon'
       })
       .then(res => {
-        expect(res.header['set-cookie'][0]).toEqual(expect.stringContaining('session='));
-        expect(res.header['set-cookie'][0]).toEqual(expect.stringContaining('piNickname='));
+        expect(res.header['set-cookie'][0]).toEqual(expect.stringContaining('dataSession='));
         expect(res.body).toEqual({
           _id: expect.any(String),
           piNickname: 'testPi',
