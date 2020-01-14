@@ -71,8 +71,23 @@ describe('app routes', () => {
     return await userAgent
       .post('/api/v1/auth/logout')
       .then(res => {
-        console.log(res.header);
         expect(res.header['set-cookie'][0]).toEqual(expect.stringContaining('session=;'));
       });
+  });
+
+  it('can patch a user', async() => {
+    const user = await getUser();
+    return request(app)
+      .patch(`/api/v1/auth/${user.id}`)
+      .send({ password: 'notPasswordAnymore', myPi: { piNickname: 'MyFirstPi'} })
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: user._id.toString(),
+          email: 'user@tess.com',
+          role: 'user',
+          myPis: [{ piNickname: 'MyFirstPi' }]
+        });
+      });
+
   });
 });
