@@ -4,7 +4,7 @@
   "description": "Tess Lameyer, Lisa Carpenter, Ian Andrewson, Alan Hermanns, Ben Beekman",
   "main": "server.js",
   "scripts": {
-    "test": "jest --verbose --runInBand --coverage",
+    "test": "jest --verbose --runInBand",
     "test:watch": "npm run test -- --watchAll",
     "start": "node server.js",
     "start:watch": "nodemon server.js"
