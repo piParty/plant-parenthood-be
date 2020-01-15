@@ -9,7 +9,7 @@ describe('app routes', () => {
   it('can signup a user via POST', () => {
     return request(app)
       .post('/api/v1/auth/signup')
-      .send({ email: 'new@tess.com',  password: 'password1', role: 'user' })
+      .send({ email: 'new@tess.com',  password: 'password', role: 'user' })
       .then(res => {
         expect(res.header['set-cookie'][0]).toEqual(expect.stringContaining('session='));
         expect(res.body).toEqual({
