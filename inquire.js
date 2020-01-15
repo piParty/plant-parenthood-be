@@ -55,17 +55,24 @@ inquirer
       message: 'Password:'
     }])
   .then(async answers => {
-    const newUser = await superagent('<signup route>', { 
+    const newUser = await superagent('<signup route>', {
+      'TYPE': 'Application/JSON',
+      'METHOD': 'POST'
+    }, { 
       email: answers.email,  
       password: answers.password, 
       role: 'user' 
     });
     const dataSesssion = await superagent('<pidatasessions route>', {
+      'TYPE': 'Application/JSON',
+      'METHOD': 'POST'
+    }, {
       piNickname: answers.nickName, 
       sensorType: answers.sensors,
       piLocationInHouse: answers.piLocationInHouse,
       city: answers.city
     });
+    const piCookie = dataSesssion.cookies;
     console.info('ooooooOh!', `So, I hope you know what you're getting yourself into, because we won't tell you, but... We'd like to get this Pi party started, so...
     please, find it in your heart to enter the following into the command line after we end this line of inquiry.
     It might give you a disconcerting message. Just enter yes.
@@ -74,7 +81,7 @@ inquirer
     then enter
     '< scp link to github python script here ./downloads>'
     then enter,
-    '<command to run python script>'
+    <command to run -c ${piCookie} etc.. python script>'
      `);
   })
 ;
