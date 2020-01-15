@@ -12,94 +12,232 @@ inquirer
       name: 'loginOrSignup',
       message: 'Login or Signup',
       choices: ['Login, Sign Up']
-    },
-    {
-      name : 'userName',
-      message :`So, I see you want to grow a plant.
-                What is your Pi's Username?`
-    },
-    {
-      name: 'IPAddress',
-      message : 'what is your pi\'s IP Address?'
-    },
-    {
-      name: 'nickName',
-      message: 'Give your Pi a nick name. This will be used for authentication purposes.'
-    },
-    {
-      type: 'checkbox',
-      name: 'sensors',
-      message: 'Select sensors you have attached to your Pi and want to use.',
-      choices:['light', 'temperature/humidity', 'light-hdr']
-    },
-    {
-      name : 'piLocationInHouse',
-      message: 'Where is the Pi in your house? This has nothing to do with the security of your Pi.'
-    },
-    {
-      name: 'city',
-      message: 'What city is your Pi in?'
-    },
-    {
-      name: 'appUserName',
-      message:'Please enter your login credentials, email:'
-    },
-    {
-      type: 'password',
-      name: 'appPassword',
-      message: 'Password:'
-    }])
+    }
+    // {
+    //   name : 'userName',
+    //   message :`So, I see you want to grow a plant.
+    //             What is your Pi's Username?`
+    // },
+    // {
+    //   name: 'IPAddress',
+    //   message : 'what is your pi\'s IP Address?'
+    // },
+    // {
+    //   name: 'nickName',
+    //   message: 'Give your Pi a nick name. This will be used for authentication purposes.'
+  ])
   .then(async answers => {
-    if(answers.loginOrSignup === 'Sign Up'){
-      const newUser = await superagent('<signup route>', {
-        'TYPE': 'Application/JSON',
-        'METHOD': 'POST'
-      }, { 
-        email: answers.email,  
-        password: answers.password, 
-        role: 'user' 
-      });
-    }
-    else if(answers.loginOrSignup === 'Login'){
-      const newUser = await superagent('<login route>', {
-        'TYPE': 'Application/JSON',
-        'METHOD': 'POST'
-      }, { 
-        email: answers.email,  
-        password: answers.password, 
-        role: 'user' 
-      });
-    }
-    const dataSesssion = await superagent('<pidatasessions route>', {
-      'TYPE': 'Application/JSON',
-      'METHOD': 'POST'
-    }, {
-      piNickname: answers.nickName, 
-      sensorType: answers.sensors,
-      piLocationInHouse: answers.piLocationInHouse,
-      city: answers.city
-    });
-    const piDataSession = dataSesssion.headers.cookies.piDataSession;
-
-    ssh.connect({
-      host: answers.IPAddress,
-      username : answers.userName,
-      password: answers.password
-    })
-      .then(function(){
-        ssh.execCommand('wget (link to gist python script)', {
-          onStderr(err){
-            console.log(err + 'Try again');
+    if(answers.loginOrSignup === 'Login'){
+      inquirer
+        .prompt([
+          {
+            name: 'email',
+            message: 'Enter Your Email Address'
+          },
+          {
+            type: 'password',
+            name: 'password',
+            message: 'Enter Your Password'
           }
+        ])
+        .then(async answers => {
+          const user = await superagent('<login route>', {
+            'TYPE': 'Application/JSON',
+            'METHOD': 'POST'
+          }, { 
+            email: answers.email,  
+            password: answers.password, 
+            role: 'user' 
+          });
+        })
+        .then(function(){
+          inquirer
+            .prompt([
+              {
+                type: 'list',
+                name: 'loginOptions',
+                message: 'Would you like to...',
+                choices: ['Get a Pi\'s session data', 'Ammend a Session', 'Post a Session', 'Log Out']
+              }
+            ])
+            .then(async answers => {
+              if(answers.loginOptions === 'Get a Pi\'s session data'){
+                const sessionData = await superagent('<get session by id route>');
+                console.log('Your data for this Session', sessionData);
+              }
+              if(answers.loginOptions === 'Ammend a Session'){
+                inquirer
+                  .prompt([
+                    {
+                      name: 'piToPatchNickName',
+                      message: 'Enter the nickName of the Pi you would like to adjust'
+                    },
+                    {
+                      name: 'patchSessionSensors',
+                      message: 'Enter the new sensor fields you have connected to your Pi, seperated by spaces'
+                    }
+                  ])
+                  .then(async answers => {
+                    const patchedSession = await superagent('<patch session route>', {
+                      'TYPE': 'Application/JSON',
+                      'METHOD': 'POST'
+                    }, { 
+                      nickName: answers.piToPatchNickName,  
+                      sensors: answers.patchSessionSensors
+                    });
+                  });
+              }
+              if(answers.loginOptions === 'Post a Session'){
+                inquirer
+                  .prompt([
+                    {
+                      name : 'userName',
+                      message :`You want to grow a plant.
+                          What is your Pi's Username?`
+                    },
+                    {
+                      name: 'IPAddress',
+                      message : 'what is your pi\'s IP Address?'
+                    },
+                    {
+                      name: 'nickName',
+                      message: 'Give your Pi a nick name. This will be used for authentication purposes.'
+                    },
+                    {
+                      type: 'checkbox',
+                      name: 'sensors',
+                      message: 'Select sensors you have attached to your Pi and want to use.',
+                      choices:['light', 'temperature/humidity', 'light-hdr']
+                    },
+                    {
+                      name : 'piLocationInHouse',
+                      message: 'Where is the Pi in your house? This has nothing to do with the security of your Pi.'
+                    },
+                    {
+                      name: 'city',
+                      message: 'What city is your Pi in?'
+                    }
+                  ])
+                  .then(async answers => {
+                    const dataSessionResponse = await superagent('<pidatasessions post route>', {
+                      'TYPE': 'Application/JSON',
+                      'METHOD': 'POST'
+                    }, {
+                      piNickname: answers.nickName, 
+                      sensorType: answers.sensors,
+                      piLocationInHouse: answers.piLocationInHouse,
+                      city: answers.city
+                    });
+                    const dataSession = dataSessionResponse.headers.cookies.dataSession;
+                    ssh.connect({
+                      host: answers.IPAddress,
+                      username : answers.userName,
+                      password: answers.password
+                    })
+                      .then(function(){
+                        ssh.execCommand(`python3 (file name) -c ${dataSession} -s ${JSON.stringify(answers.sensors).slice(1, JSON.stringify(answers.sensors).length - 2)}`);
+                      });
+                  });
+              }
+              if(answers.loginOptions === 'Log Out'){
+                superagent('<patch session route>', {
+                  'TYPE': 'Application/JSON',
+                  'METHOD': 'POST'
+                })
+                  .then(function(){
+                    console.log('You\'re logged out.');
+                  });
+              }
+            });
         });
-      })
-      .then(function(){
-        ssh.execCommand(`python3 ./light.py -c ${piDataSession} -s ${JSON.stringify(answers.sensors).slice(1, JSON.stringify(answers.sensors).length - 2)}`);
-      })
-      .then(function(){
-        console.info('ooooooOh!', 'So, I hope you know what you\'re getting yourself into, because we won\'t tell you, but... We\'d like to get this Pi party started');
-      });
-  });
+    }
+    else if(answers.loginOrSignup === 'Sign Up'){
+      inquirer
+        .prompt([
+          {
+            name: 'email',
+            message: 'Enter Your Email Address'
+          },
+          {
+            type: 'password',
+            name: 'password',
+            message: 'Enter Your Password'
+          }
+        ])
+        .then(async answers => {
+          const user = await superagent('<login route>', {
+            'TYPE': 'Application/JSON',
+            'METHOD': 'POST'
+          }, { 
+            email: answers.email,  
+            password: answers.password, 
+            role: 'user' 
+          });
+        })
+    inquirer
+      .prompt([
+        {
+          name : 'userName',
+          message :`You want to grow a plant.
+              What is your Pi's Username?`
+        },
+        {
+          name: 'IPAddress',
+          message : 'what is your pi\'s IP Address?'
+        },
+        {
+          name: 'nickName',
+          message: 'Give your Pi a nick name. This will be used for authentication purposes.'
+        },
+        {
+          type: 'checkbox',
+          name: 'sensors',
+          message: 'Select sensors you have attached to your Pi and want to use.',
+          choices:['light', 'temperature/humidity', 'light-hdr']
+        },
+        {
+          name : 'piLocationInHouse',
+          message: 'Where is the Pi in your house? This has nothing to do with the security of your Pi.'
+        },
+        {
+          name: 'city',
+          message: 'What city is your Pi in?'
+        }])
+        .then(answers => {
+
+          const dataSessionResponse = await superagent('<pidatasessions route>', {
+            'TYPE': 'Application/JSON',
+            'METHOD': 'POST'
+          }, {
+            piNickname: answers.nickName, 
+            sensorType: answers.sensors,
+            piLocationInHouse: answers.piLocationInHouse,
+            city: answers.city
+          });
+          const dataSession = dataSessionResponse.headers.cookies.dataSession;
+          
+          ssh.connect({
+            host: answers.IPAddress,
+            username : answers.userName,
+            password: answers.password
+          })
+          .then(function(){
+            ssh.execCommand('wget (link to gist python script)', {
+              onStderr(err){
+                console.log(err + 'Try again');
+              }
+            });
+          })
+          .then(function(){
+            ssh.execCommand(`python3 (file name) -c ${dataSession} -s ${JSON.stringify(answers.sensors).slice(1, JSON.stringify(answers.sensors).length - 2)}`);
+          })
+          .then(function(){
+            console.info('ooooooOh!', 'So, I hope you know what you\'re getting yourself into, because we won\'t tell you, but... We\'d like to get this Pi party started');
+          });
+        })
+  }
+});
+
 //    execFilePromise(`python -c${piDataSession} -s${(answers.sensors).map(sensor => sensor)}`);
 
 // console.info('ooooooOh!', `So, I hope you know what you're getting yourself into, because we won't tell you, but... We'd like to get this Pi party started, so...
