@@ -39,6 +39,8 @@ We tested two different light sensors. The Adafruit TSL-2591 requires a bit more
 - Download the NOOBS operating system from [The Raspberry Pi NOOBS download page](https://www.raspberrypi.org/downloads/noobs/)
 - Once extracted, copied the archive folder's contents to the top level of the formatted SD card
 - Eject the Micro SD card from your computer, and insert it in the slot on the Raspberry Pi
+
+### On the Raspberry Pi
 - Connect a display and keyboard to your Raspberry Pi, then connect the power cord.
 - Allow the device to boot into Raspbian, and complete the prompts, making sure to set a non-default password for your user.
 - Confirm the dialog asking you to update the Raspberry Pi's software.
