@@ -1,4 +1,5 @@
 require('dotenv').config();
+const { userAgent, getUser, getPiDataSession } = require('../lib/helpers/data-helpers.js');
 const connect = require('../lib/utils/connect.js');
 const request = require('supertest');
 const app = require('../lib/app.js');
@@ -8,21 +9,21 @@ const PiDataSession = require('../lib/models/PiDataSession.js');
 
 describe('piDataSession route tests', () => {
 
-  beforeAll(() => {
-    connect();
-  }); 
+  // beforeAll(() => {
+  //   connect();
+  // }); 
 
-  beforeEach(() => {
-    return mongoose.connection.dropDatabase();
-  });
+  // beforeEach(() => {
+  //   return mongoose.connection.dropDatabase();
+  // });
 
-  afterAll(() => {
-    return mongoose.connection.close();
-  });
+  // afterAll(() => {
+  //   return mongoose.connection.close();
+  // });
 
   it('should be able to post a new session', () => {
-    return request(app)
-      .post('/api/v1/piDataSessions')
+    return userAgent
+      .post('/api/v1/pi-data-sessions')
       .send({ 
         piNickname: 'testPi', 
         sensorType: ['light'],
@@ -42,6 +43,18 @@ describe('piDataSession route tests', () => {
       });
   });
 
+  it('should throw an error when a user posts data without being logged in', () => {
+    return request(app)
+      .post('/api/v1/pi-data-sessions/')
+      .send('this should error')
+      .then(res => {
+        expect(res.body).toEqual({
+          message: 'Login required.',
+          status: 403
+        });
+      });
+  });
+
   it('should be able to get a dataSession by ID', async() => {
     const session = await PiDataSession.create({ 
       piNickname: 'testPi', 
@@ -49,8 +62,9 @@ describe('piDataSession route tests', () => {
       piLocationInHouse: 'living room, east wall',
       city: 'Portland, Oregon'
     });
-    return request(app)
-      .get(`/api/v1/piDataSessions/${session._id}`)
+    
+    return userAgent
+      .get(`/api/v1/pi-data-sessions/${session._id}`)
       .then(res => {
         expect(res.body).toEqual({
           _id: session._id.toString(),
@@ -63,6 +77,18 @@ describe('piDataSession route tests', () => {
       });
   });
 
+  it('should error if a user tries to get a dataSession without being logged in', () => {
+    const session = getPiDataSession();
+    return request(app)
+      .get(`/api/v1/pi-data-sessions/${session.id}`)
+      .then(res => {
+        expect(res.body).toEqual({
+          message: 'Login required.',
+          status: 403
+        });
+      });
+  });
+
   it('should be able to get all dataSessions', async() => {
     const sessions = await PiDataSession.create([
       { piNickname: 'test1', sensorType: ['light'], piLocationInHouse: 'east', city: 'Here' },
@@ -70,8 +96,8 @@ describe('piDataSession route tests', () => {
       { piNickname: 'test3', sensorType: ['light'], piLocationInHouse: 'kitchen', city: 'anywhere' }
     ]);
 
-    return request(app)
-      .get('/api/v1/piDataSessions')
+    return userAgent
+      .get('/api/v1/pi-data-sessions')
       .then(res => {
         sessions.forEach(session => {
           expect(res.body).toContainEqual({
@@ -86,45 +112,71 @@ describe('piDataSession route tests', () => {
       });
   });
 
-  it('should be able to update a data session', async() => {
-    const session = await PiDataSession.create({ 
-      piNickname: 'testPi', 
-      sensorType: ['light'],
-      piLocationInHouse: 'living room, east wall',
-      city: 'Portland, Oregon'
-    });
+  it('should throw an error if a user tries to get all dataSessions without being logged in', () => {
     return request(app)
-      .patch(`/api/v1/piDataSessions/${session._id}`)
+      .get('/api/v1/pi-data-sessions/')
+      .then(res => {
+        expect(res.body).toEqual({
+          message: 'Login required.',
+          status: 403
+        });
+      });
+  });
+
+  it('should be able to update a data session', async() => {
+    const session = await getPiDataSession();
+    return userAgent
+      .patch(`/api/v1/pi-data-sessions/${session._id}`)
       .send({ sensorType: ['Gamma Ray'] })
       .then(res => {
         expect(res.body).toEqual({
-          _id: session._id.toString(),
-          piNickname: 'testPi',
+          _id: session._id,
+          piNickname: session.piNickname,
           sensorType: ['Gamma Ray'],
-          piLocationInHouse: 'living room, east wall',
-          city: 'Portland, Oregon',
+          piLocationInHouse: session.piLocationInHouse,
+          city: session.city,
           __v: 0
         });
       });
   });
 
-  it('should be able to delete a dataSession', async() => {
-    const session = await PiDataSession.create({ 
-      piNickname: 'testPi', 
-      sensorType: ['light'],
-      piLocationInHouse: 'living room, east wall',
-      city: 'Portland, Oregon'
-    });
+  it('should throw an error if a user tries to update a dataSession without being logged in', async() => {
+    const session = await getPiDataSession();
     return request(app)
-      .delete(`/api/v1/piDataSessions/${session._id}`)
+      .patch(`/api/v1/pi-data-sessions/${session.id}`)
+      .send({ sensorType: ['Gamma Ray'] })
+      .then(res => {
+        expect(res.body).toEqual({
+          message: 'Login required.',
+          status: 403
+        });
+      });
+  });
+
+  it('should be able to delete a dataSession', async() => {
+    const session = await getPiDataSession();
+    return userAgent
+      .delete(`/api/v1/pi-data-sessions/${session._id}`)
       .then(res => {
         expect(res.body).toEqual({
           _id: expect.any(String),
-          piNickname: 'testPi',
-          sensorType: ['light'],
-          piLocationInHouse: 'living room, east wall',
-          city: 'Portland, Oregon',
+          piNickname: session.piNickname,
+          sensorType: session.sensorType,
+          piLocationInHouse: session.piLocationInHouse,
+          city: session.city,
           __v: 0
+        });
+      });
+  });
+
+  it('should throw an error if a user tries to delete a sessionId without being logged in', async() => {
+    const session = await getPiDataSession();
+    return request(app)
+      .delete(`/api/v1/pi-data-sessions/${session.id}`)
+      .then(res => {
+        expect(res.body).toEqual({
+          message: 'Login required.',
+          status: 403
         });
       });
   });
