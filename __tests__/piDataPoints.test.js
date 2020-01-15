@@ -17,33 +17,37 @@ describe('piDataPoint route tests', () => {
         piLocationInHouse: 'kithcen', 
         city: 'Portland, OR'
       })
-      .then(res => {
+      .then(()=> {
+        //cookies persist, so this userAgent has the dataSession
         return userAgent
         //now that we have a cookie (dataSession), we can post a data point
           .post('/api/v1/pi-data-points') 
         //shape of data has to look like what the pi is sending
           .send({
-            piDataSessionId: res.body._id,
-            data: {
-              averageValue: 10, 
-              standardDeviation: 2
+            data: { 
+              light: {
+                averageValue: 10, 
+                standardDeviation: 2
+              }
             },
             piTimestamp: Date.now()
+          })
+          .then(res => {
+            // expect(res.header['set-cookie'][0]).toEqual(expect.stringContaining('dataSession='));
+            expect(res.body).toEqual({
+              _id: expect.any(String),
+              piDataSessionId: res.body._id,
+              data: {
+                light:{
+                  averageValue: 10, 
+                  standardDeviation: 2
+                }
+              },
+              piTimestamp: expect.any(Date),
+              __v: 0 
+            });
           });
-      })
-      
-      .then(res => {
-        // expect(res.header['set-cookie'][0]).toEqual(expect.stringContaining('session='));
-        expect(res.body).toEqual({
-          _id: expect.any(String),
-          piDataSessionId: session._id.toString(),
-          data: {
-            averageValue: 10, 
-            standardDeviation: 2
-          },
-          piTimestamp: Date.now(),
-          __v: 0 
-        });
       });
+      
   });
 });
