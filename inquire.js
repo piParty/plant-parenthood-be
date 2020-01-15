@@ -2,6 +2,8 @@ const inquirer = require('inquirer');
 const User = require('./lib/models/User');
 const PiDataSession = require('./lib/models/PiDataSession');
 const superagent = require(superagent);
+const spawn = require('child_process');
+
 inquirer
   .prompt([
     {
@@ -73,15 +75,24 @@ inquirer
       city: answers.city
     });
     const piDataSession = dataSesssion.headers.cookies.piDataSession;
-    console.info('ooooooOh!', `So, I hope you know what you're getting yourself into, because we won't tell you, but... We'd like to get this Pi party started, so...
-    please, find it in your heart to enter the following into the command line after we end this line of inquiry.
-    It might give you a disconcerting message. Just enter yes.
-    Then after you enter your password enter the ssh command again.
-    ssh ${answers.userName}@${answers.IPAddress} ,
-    then enter
-    '< scp link to github python script here ./downloads>'
-    then enter,
-    <command to run -c ${piDataSession} etc.. python script>'
-     `);
+    spawn
+      .execFile(`ssh ${answers.userName}@${answers.IPAddress}`);
+    spawn
+      .execFile('wget (link to gist python script)');
+    spawn
+      .execFile(`python -c${piDataSession} -s${(answers.sensors).map(sensor => sensor)}`);
+    console.log('done');
+
+
+    // console.info('ooooooOh!', `So, I hope you know what you're getting yourself into, because we won't tell you, but... We'd like to get this Pi party started, so...
+    // please, find it in your heart to enter the following into the command line after we end this line of inquiry.
+    // It might give you a disconcerting message. Just enter yes.
+    // Then after you enter your password enter the ssh command again.
+    // ssh ${answers.userName}@${answers.IPAddress} ,
+    // then enter
+    // '< scp link to github python script here ./downloads>'
+    // then enter,
+    // <command to run -c ${piDataSession} etc.. python script>'
+    //  `);
   })
 ;
