@@ -1,7 +1,7 @@
 const inquirer = require('inquirer');
 const User = require('./lib/models/User');
 const PiDataSession = require('./lib/models/PiDataSession');
-const superagent = require(superagent);
+const superagent = require('superagent');
 const node_ssh = require('node-ssh');
 const ssh = new node_ssh();
 
@@ -11,7 +11,7 @@ inquirer
       type: 'list',
       name: 'loginOrSignup',
       message: 'Login or Signup',
-      choices: ['Login, Sign Up']
+      choices: ['Login', 'Sign Up']
     }
     // {
     //   name : 'userName',
@@ -173,37 +173,37 @@ inquirer
             password: answers.password, 
             role: 'user' 
           });
-        })
-    inquirer
-      .prompt([
-        {
-          name : 'userName',
-          message :`You want to grow a plant.
+        });
+      inquirer
+        .prompt([
+          {
+            name : 'userName',
+            message :`You want to grow a plant.
               What is your Pi's Username?`
-        },
-        {
-          name: 'IPAddress',
-          message : 'what is your pi\'s IP Address?'
-        },
-        {
-          name: 'nickName',
-          message: 'Give your Pi a nick name. This will be used for authentication purposes.'
-        },
-        {
-          type: 'checkbox',
-          name: 'sensors',
-          message: 'Select sensors you have attached to your Pi and want to use.',
-          choices:['light', 'temperature/humidity', 'light-hdr']
-        },
-        {
-          name : 'piLocationInHouse',
-          message: 'Where is the Pi in your house? This has nothing to do with the security of your Pi.'
-        },
-        {
-          name: 'city',
-          message: 'What city is your Pi in?'
-        }])
-        .then(answers => {
+          },
+          {
+            name: 'IPAddress',
+            message : 'what is your pi\'s IP Address?'
+          },
+          {
+            name: 'nickName',
+            message: 'Give your Pi a nick name. This will be used for authentication purposes.'
+          },
+          {
+            type: 'checkbox',
+            name: 'sensors',
+            message: 'Select sensors you have attached to your Pi and want to use.',
+            choices:['light', 'temperature/humidity', 'light-hdr']
+          },
+          {
+            name : 'piLocationInHouse',
+            message: 'Where is the Pi in your house? This has nothing to do with the security of your Pi.'
+          },
+          {
+            name: 'city',
+            message: 'What city is your Pi in?'
+          }])
+        .then(async answers => {
 
           const dataSessionResponse = await superagent('<pidatasessions route>', {
             'TYPE': 'Application/JSON',
@@ -221,22 +221,22 @@ inquirer
             username : answers.userName,
             password: answers.password
           })
-          .then(function(){
-            ssh.execCommand('wget (link to gist python script)', {
-              onStderr(err){
-                console.log(err + 'Try again');
-              }
+            .then(function(){
+              ssh.execCommand('wget (link to gist python script)', {
+                onStderr(err){
+                  console.log(err + 'Try again');
+                }
+              });
+            })
+            .then(function(){
+              ssh.execCommand(`python3 (file name) -c ${dataSession} -s ${JSON.stringify(answers.sensors).slice(1, JSON.stringify(answers.sensors).length - 2)}`);
+            })
+            .then(function(){
+              console.info('ooooooOh!', 'So, I hope you know what you\'re getting yourself into, because we won\'t tell you, but... We\'d like to get this Pi party started');
             });
-          })
-          .then(function(){
-            ssh.execCommand(`python3 (file name) -c ${dataSession} -s ${JSON.stringify(answers.sensors).slice(1, JSON.stringify(answers.sensors).length - 2)}`);
-          })
-          .then(function(){
-            console.info('ooooooOh!', 'So, I hope you know what you\'re getting yourself into, because we won\'t tell you, but... We\'d like to get this Pi party started');
-          });
-        })
-  }
-});
+        });
+    }
+  });
 
 //    execFilePromise(`python -c${piDataSession} -s${(answers.sensors).map(sensor => sensor)}`);
 
