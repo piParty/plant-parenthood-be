@@ -25,7 +25,7 @@ describe('piDataSession route tests', () => {
       .post('/api/v1/piDataSessions')
       .send({ 
         piNickname: 'testPi', 
-        sensorType: 'light',
+        sensorType: ['light'],
         piLocationInHouse: 'living room, east wall',
         city: 'Portland, Oregon'
       })
@@ -34,7 +34,7 @@ describe('piDataSession route tests', () => {
         expect(res.body).toEqual({
           _id: expect.any(String),
           piNickname: 'testPi',
-          sensorType: 'light',
+          sensorType: ['light'],
           piLocationInHouse: 'living room, east wall',
           city: 'Portland, Oregon',
           __v: 0
@@ -45,7 +45,7 @@ describe('piDataSession route tests', () => {
   it('should be able to get a dataSession by ID', async() => {
     const session = await PiDataSession.create({ 
       piNickname: 'testPi', 
-      sensorType: 'light',
+      sensorType: ['light'],
       piLocationInHouse: 'living room, east wall',
       city: 'Portland, Oregon'
     });
@@ -55,7 +55,7 @@ describe('piDataSession route tests', () => {
         expect(res.body).toEqual({
           _id: session._id.toString(),
           piNickname: 'testPi',
-          sensorType: 'light',
+          sensorType: ['light'],
           piLocationInHouse: 'living room, east wall',
           city: 'Portland, Oregon',
           __v: 0
@@ -65,9 +65,9 @@ describe('piDataSession route tests', () => {
 
   it('should be able to get all dataSessions', async() => {
     const sessions = await PiDataSession.create([
-      { piNickname: 'test1', sensorType: 'light', piLocationInHouse: 'east', city: 'Here' },
-      { piNickname: 'test2', sensorType: 'light', piLocationInHouse: 'west', city: 'There' },
-      { piNickname: 'test3', sensorType: 'light', piLocationInHouse: 'kitchen', city: 'anywhere' }
+      { piNickname: 'test1', sensorType: ['light'], piLocationInHouse: 'east', city: 'Here' },
+      { piNickname: 'test2', sensorType: ['light'], piLocationInHouse: 'west', city: 'There' },
+      { piNickname: 'test3', sensorType: ['light'], piLocationInHouse: 'kitchen', city: 'anywhere' }
     ]);
 
     return request(app)
@@ -77,7 +77,7 @@ describe('piDataSession route tests', () => {
           expect(res.body).toContainEqual({
             _id: session._id.toString(),
             piNickname: session.piNickname,
-            sensorType: 'light',
+            sensorType: ['light'],
             piLocationInHouse: session.piLocationInHouse,
             city: session.city,
             __v: 0
@@ -89,18 +89,18 @@ describe('piDataSession route tests', () => {
   it('should be able to update a data session', async() => {
     const session = await PiDataSession.create({ 
       piNickname: 'testPi', 
-      sensorType: 'light',
+      sensorType: ['light'],
       piLocationInHouse: 'living room, east wall',
       city: 'Portland, Oregon'
     });
     return request(app)
       .patch(`/api/v1/piDataSessions/${session._id}`)
-      .send({ sensorType: 'Gamma Ray' })
+      .send({ sensorType: ['Gamma Ray'] })
       .then(res => {
         expect(res.body).toEqual({
           _id: session._id.toString(),
           piNickname: 'testPi',
-          sensorType: 'Gamma Ray',
+          sensorType: ['Gamma Ray'],
           piLocationInHouse: 'living room, east wall',
           city: 'Portland, Oregon',
           __v: 0
@@ -111,7 +111,7 @@ describe('piDataSession route tests', () => {
   it('should be able to delete a dataSession', async() => {
     const session = await PiDataSession.create({ 
       piNickname: 'testPi', 
-      sensorType: 'light',
+      sensorType: ['light'],
       piLocationInHouse: 'living room, east wall',
       city: 'Portland, Oregon'
     });
@@ -121,7 +121,7 @@ describe('piDataSession route tests', () => {
         expect(res.body).toEqual({
           _id: expect.any(String),
           piNickname: 'testPi',
-          sensorType: 'light',
+          sensorType: ['light'],
           piLocationInHouse: 'living room, east wall',
           city: 'Portland, Oregon',
           __v: 0
