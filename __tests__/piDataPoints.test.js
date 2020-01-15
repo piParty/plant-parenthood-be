@@ -7,21 +7,31 @@ const app = require('../lib/app');
 
 describe('piDataPoint route tests', () => {
   it('(the pi) should be able to verify a session and post a data point using this route', () => {
-
-    userAgent
+ 
+    return userAgent
     //to make sure that the agent gets assigned a data session cookie!
       .post('/api/v1/pi-data-sessions')
-    
-    return request(app)
-      .post('/api/v1/pi-data-points') 
       .send({
-        piDataSessionId: session._id,
-        data: {
-          averageValue: 10, 
-          standardDeviation: 2
-        },
-        piTimestamp: Date.now()
+        piNickname: 'happyPi', 
+        sensorType: ['light'], 
+        piLocationInHouse: 'kithcen', 
+        city: 'Portland, OR'
       })
+      .then(res => {
+        return userAgent
+        //now that we have a cookie (dataSession), we can post a data point
+          .post('/api/v1/pi-data-points') 
+        //shape of data has to look like what the pi is sending
+          .send({
+            piDataSessionId: res.body._id,
+            data: {
+              averageValue: 10, 
+              standardDeviation: 2
+            },
+            piTimestamp: Date.now()
+          });
+      })
+      
       .then(res => {
         // expect(res.header['set-cookie'][0]).toEqual(expect.stringContaining('session='));
         expect(res.body).toEqual({

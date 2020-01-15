@@ -46,6 +46,7 @@ def get_temp_hum_readings():
     return Adafruit_DHT.read_retry(sensor, gpio)
 
 def post_data(data_bundle):
+    # will eventually change to heroku server url
     r = requests.post('http://192.168.1.204:7890/api/v1/dataPoints',\
                         headers = { 'Content-Type': 'application/json' },\
                         cookies = cookie,\
