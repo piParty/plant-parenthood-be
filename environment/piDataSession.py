@@ -83,7 +83,7 @@ for i in range(num_cycles):
         time.sleep(reading_interval)
     data_bundle = {
         "data": {},
-        "time_stamp": datetime.now()
+        "piTimestamp": datetime.now()
         }
     if "light" in sensors:
         data_bundle["data"]["light"] = light_stats

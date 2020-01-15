@@ -6,18 +6,14 @@ const app = require('../lib/app');
 
 
 describe('piDataPoint route tests', () => {
-  it('(the pi) should be able to verify a session and post a data point using this route', async() => {
-    const session = await getPiDataSession()
-      // .then(session => console.log(session.cookies, 'this is the data session cookie'))
-    
-    console.log(session, 'this is the sessionnnnnnnnnn')
+  it('(the pi) should be able to verify a session and post a data point using this route', () => {
 
     userAgent
     //to make sure that the agent gets assigned a data session cookie!
       .post('/api/v1/pi-data-sessions')
     
     return request(app)
-      .post('/api/v1/data-points') 
+      .post('/api/v1/pi-data-points') 
       .send({
         piDataSessionId: session._id,
         data: {
