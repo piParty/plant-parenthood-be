@@ -47,7 +47,8 @@ def get_temp_hum_readings():
 
 def post_data(data_bundle):
     r = requests.post('http://192.168.1.204:7890/api/v1/dataPoints',\
-                        headers = { 'Content-Type': 'application/json', 'cookies': cookie },\
+                        headers = { 'Content-Type': 'application/json' },\
+                        cookies = cookie,\
                         data = json.dumps(data_bundle, default=str))
     print(r.status_code)
     print(r.text)
