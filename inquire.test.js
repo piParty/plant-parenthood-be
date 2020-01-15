@@ -27,6 +27,7 @@ describe('post to data sessions and initiate collecting user data', () => {
         expect(res.body).toEqual({
           __v: 0,
           _id: expect.any(mongoose.Types.ObjectId),
+          
           email: answers.email,
           myPis: [],
           role: 'user'

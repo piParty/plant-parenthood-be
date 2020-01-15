@@ -72,7 +72,7 @@ inquirer
       piLocationInHouse: answers.piLocationInHouse,
       city: answers.city
     });
-    const piCookie = dataSesssion.cookies;
+    const piDataSession = dataSesssion.headers.cookies.piDataSession;
     console.info('ooooooOh!', `So, I hope you know what you're getting yourself into, because we won't tell you, but... We'd like to get this Pi party started, so...
     please, find it in your heart to enter the following into the command line after we end this line of inquiry.
     It might give you a disconcerting message. Just enter yes.
@@ -81,7 +81,7 @@ inquirer
     then enter
     '< scp link to github python script here ./downloads>'
     then enter,
-    <command to run -c ${piCookie} etc.. python script>'
+    <command to run -c ${piDataSession} etc.. python script>'
      `);
   })
 ;
