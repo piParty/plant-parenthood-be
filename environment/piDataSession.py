@@ -46,8 +46,10 @@ def get_temp_hum_readings():
     return Adafruit_DHT.read_retry(sensor, gpio)
 
 def post_data(data_bundle):
+    # will eventually change to heroku server url
     r = requests.post('http://192.168.1.204:7890/api/v1/dataPoints',\
-                        headers = { 'Content-Type': 'application/json', 'cookies': cookie },\
+                        headers = { 'Content-Type': 'application/json' },\
+                        cookies = cookie,\
                         data = json.dumps(data_bundle, default=str))
     print(r.status_code)
     print(r.text)
@@ -83,7 +85,7 @@ for i in range(num_cycles):
         time.sleep(reading_interval)
     data_bundle = {
         "data": {},
-        "time_stamp": datetime.now()
+        "piTimestamp": datetime.now()
         }
     if "light" in sensors:
         data_bundle["data"]["light"] = light_stats

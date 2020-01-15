@@ -5,11 +5,16 @@ const request = require('supertest');
 const app = require('../lib/app');
 
 
-describe('app routes', () => {
+describe('auth and user routes', () => {
   it('can signup a user via POST', () => {
     return request(app)
       .post('/api/v1/auth/signup')
-      .send({ email: 'new@tess.com',  password: 'password', role: 'user', myPis: [{ piNickname: 'myFirstPi' }] })
+      .send({ 
+        email: 'new@tess.com',  
+        password: 'password', 
+        role: 'user', 
+        myPis: [{ piNickname: 'myFirstPi' }] 
+      })
       .then(res => {
         expect(res.header['set-cookie'][0]).toEqual(expect.stringContaining('session='));
         expect(res.body).toEqual({
@@ -74,7 +79,7 @@ describe('app routes', () => {
         expect(res.header['set-cookie'][0]).toEqual(expect.stringContaining('session=;'));
       });
   });
-
+//check that existing pis are not deleted
   it('can patch a user', async() => {
     const user = await getUser();
     return request(app)

@@ -1,24 +1,54 @@
 require('dotenv').config();
 
-const { getUser } = require('../lib/helpers/data-helpers');
+const { getPiDataPoint, getPiDataSession, userAgent } = require('../lib/helpers/data-helpers');
 const request = require('supertest');
 const app = require('../lib/app');
 
 
-describe('app routes', () => {
-  it('should be able to verify a session and post a data point', () => {
-    return request(app)
-      .post('/dataPoints', {
-        averageValue: 4,
-        standardDeviation: 1,
-        piTimestamp: Date.now()
+describe('piDataPoint route tests', () => {
+  it('(the pi) should be able to verify a session and post a data point using this route', () => {
+ 
+    let dataSessionId;
+    return userAgent
+    //to make sure that the agent gets assigned a data session cookie!
+      .post('/api/v1/pi-data-sessions')
+      .send({
+        piNickname: 'happyPi', 
+        sensorType: ['light'], 
+        piLocationInHouse: 'kithcen', 
+        city: 'Portland, OR'
       })
-      .then(res => {
-        expect(res.status).toEqual(404);
-        expect(res.body).toEqual({
-          status: 404,
-          message: 'Not Found'
-        });
+      .then(res=> {
+        dataSessionId = res.body._id;
+        //cookies persist, so this userAgent has the dataSession
+        return userAgent
+        //now that we have a cookie (dataSession), we can post a data point
+          .post('/api/v1/pi-data-points') 
+        //shape of data has to look like what the pi is sending
+          .send({
+            data: { 
+              light: {
+                averageValue: 10, 
+                standardDeviation: 2
+              }
+            },
+            piTimestamp: Date.now()
+          })
+          .then(res => {
+            expect(res.body).toEqual({
+              _id: expect.any(String),
+              piDataSessionId: dataSessionId.toString(),
+              data: {
+                light:{
+                  averageValue: 10, 
+                  standardDeviation: 2
+                }
+              },
+              piTimestamp: expect.any(String),
+              __v: 0 
+            });
+          });
       });
+      
   });
 });

@@ -9,18 +9,6 @@ const PiDataSession = require('../lib/models/PiDataSession.js');
 
 describe('piDataSession route tests', () => {
 
-  // beforeAll(() => {
-  //   connect();
-  // }); 
-
-  // beforeEach(() => {
-  //   return mongoose.connection.dropDatabase();
-  // });
-
-  // afterAll(() => {
-  //   return mongoose.connection.close();
-  // });
-
   it('should be able to post a new session', () => {
     return userAgent
       .post('/api/v1/pi-data-sessions')
@@ -56,6 +44,7 @@ describe('piDataSession route tests', () => {
   });
 
   it('should be able to get a dataSession by ID', async() => {
+    //refactor
     const session = await PiDataSession.create({ 
       piNickname: 'testPi', 
       sensorType: ['light'],
@@ -123,6 +112,7 @@ describe('piDataSession route tests', () => {
       });
   });
 
+  //shouldn't work because Gamma Ray is not part of the enum on the model
   it('should be able to update a data session', async() => {
     const session = await getPiDataSession();
     return userAgent
