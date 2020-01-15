@@ -8,6 +8,7 @@ const app = require('../lib/app');
 describe('piDataPoint route tests', () => {
   it('(the pi) should be able to verify a session and post a data point using this route', () => {
  
+    let dataSessionId;
     return userAgent
     //to make sure that the agent gets assigned a data session cookie!
       .post('/api/v1/pi-data-sessions')
@@ -17,7 +18,8 @@ describe('piDataPoint route tests', () => {
         piLocationInHouse: 'kithcen', 
         city: 'Portland, OR'
       })
-      .then(()=> {
+      .then(res=> {
+        dataSessionId = res.body._id;
         //cookies persist, so this userAgent has the dataSession
         return userAgent
         //now that we have a cookie (dataSession), we can post a data point
@@ -33,17 +35,16 @@ describe('piDataPoint route tests', () => {
             piTimestamp: Date.now()
           })
           .then(res => {
-            // expect(res.header['set-cookie'][0]).toEqual(expect.stringContaining('dataSession='));
             expect(res.body).toEqual({
               _id: expect.any(String),
-              piDataSessionId: res.body._id,
+              piDataSessionId: dataSessionId.toString(),
               data: {
                 light:{
                   averageValue: 10, 
                   standardDeviation: 2
                 }
               },
-              piTimestamp: expect.any(Date),
+              piTimestamp: expect.any(String),
               __v: 0 
             });
           });
