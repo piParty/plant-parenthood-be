@@ -87,14 +87,14 @@ inquirer
       password: answers.password
     })
       .then(function(){
-        ssh.execCommand(`wget (link to gist python script with ${piDataSession})`, {
+        ssh.execCommand('wget (link to gist python script)', {
           onStderr(err){
             console.log(err + 'Try again');
           }
         });
       })
       .then(function(){
-        ssh.dispose();
+        ssh.execCommand(`python3 ./light.py -c ${piDataSession} -s ${JSON.stringify(answers.sensors).slice(1, JSON.stringify(answers.sensors).length - 2)}`);
       })
       .then(function(){
         console.info('ooooooOh!', 'So, I hope you know what you\'re getting yourself into, because we won\'t tell you, but... We\'d like to get this Pi party started');
