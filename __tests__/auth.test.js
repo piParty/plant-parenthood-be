@@ -9,14 +9,14 @@ describe('app routes', () => {
   it('can signup a user via POST', () => {
     return request(app)
       .post('/api/v1/auth/signup')
-      .send({ email: 'new@tess.com',  password: 'password', role: 'user' })
+      .send({ email: 'new@tess.com',  password: 'password', role: 'user', myPis: [{ piNickname: 'myFirstPi' }] })
       .then(res => {
         expect(res.header['set-cookie'][0]).toEqual(expect.stringContaining('session='));
         expect(res.body).toEqual({
           _id: expect.any(String),
           email: 'new@tess.com',
           role: 'user',
-          myPis: [],
+          myPis: [{ piNickname: 'myFirstPi', _id: expect.any(String) }],
           __v: 0 
         });
       });
@@ -33,7 +33,7 @@ describe('app routes', () => {
           _id: user._id,
           email: user.email,
           role: 'user',
-          myPis: [],
+          myPis: [{ piNickname: 'userPi', _id: expect.any(String) }],
           __v: 0
         });
       });
@@ -111,7 +111,7 @@ describe('app routes', () => {
           _id: deleteMe._id,
           email: deleteMe.email,
           role: 'user',
-          myPis: [],
+          myPis: [{ piNickname: 'userPi', _id: expect.any(String) }],
           __v: 0
         });
       });
