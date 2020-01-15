@@ -9,7 +9,7 @@ describe('app routes', () => {
   it('can signup a user via POST', () => {
     return request(app)
       .post('/api/v1/auth/signup')
-      .send({ email: 'new@tess.com',  password: 'password', role: 'user' })
+      .send({ email: 'new@tess.com',  password: 'password1', role: 'user' })
       .then(res => {
         expect(res.header['set-cookie'][0]).toEqual(expect.stringContaining('session='));
         expect(res.body).toEqual({
@@ -26,12 +26,12 @@ describe('app routes', () => {
     const user = await getUser();
     return request(app)
       .post('/api/v1/auth/login')
-      .send({ email: 'user@tess.com', password: 'password' })
+      .send({ email: user.email, password: 'password' })
       .then(res => {
         expect(res.header['set-cookie'][0]).toEqual(expect.stringContaining('session='));
         expect(res.body).toEqual({
           _id: user._id,
-          email: 'user@tess.com',
+          email: user.email,
           role: 'user',
           myPis: [],
           __v: 0
@@ -83,7 +83,7 @@ describe('app routes', () => {
       .then(res => {
         expect(res.body).toEqual({
           _id: user._id.toString(),
-          email: 'user@tess.com',
+          email: user.email,
           role: 'user',
           myPis: [{ _id: expect.any(String), piNickname: 'MyFirstPi' }],
           __v: 0
@@ -93,11 +93,12 @@ describe('app routes', () => {
 
   it('should throw an error when a user tries to delete a user', async() => {
     const deleteMe = await getUser();
+
     return userAgent
       .delete(`/api/v1/auth/${deleteMe._id}`)
       .then(res => {
         expect(res.status).toEqual(403);
-        expect(res.body.message).toEqual('Admin role required to delete a user.');
+        expect(res.body.message).toEqual('Admin role required.');
       });
   });
 
@@ -108,7 +109,7 @@ describe('app routes', () => {
       .then(res => {
         expect(res.body).toEqual({
           _id: deleteMe._id,
-          email: 'user@tess.com',
+          email: deleteMe.email,
           role: 'user',
           myPis: [],
           __v: 0
