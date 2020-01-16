@@ -19,13 +19,15 @@ describe('piDataSession route tests', () => {
         city: 'Portland, Oregon'
       })
       .then(res => {
-        expect(res.header['set-cookie'][0]).toEqual(expect.stringContaining('dataSession='));
+        // expect(res.header['set-cookie'][0]).toEqual(expect.stringContaining('dataSession='));
+        console.log(res.body)
         expect(res.body).toEqual({
           _id: expect.any(String),
           piNickname: 'testPi',
           sensorType: ['light'],
           piLocationInHouse: 'living room, east wall',
           city: 'Portland, Oregon',
+          dataSession: expect.any(String),
           __v: 0
         });
       });

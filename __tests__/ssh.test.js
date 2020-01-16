@@ -18,7 +18,7 @@ describe('integration test for pi', () => {
         city: 'Portland, OR'
       })
       .then(res => {
-        return token = res.headers['set-cookie'][0].split('=')[1].split(';')[0];
+        return token = res.body.dataSession;
       })
       .then(async() =>  {
         //token correctly logs

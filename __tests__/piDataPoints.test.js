@@ -32,10 +32,13 @@ describe('piDataPoint route tests', () => {
             },
             piTimestamp: Date.now()
           })
+          .set({ 'Content-Type':'application/json', 
+            'dataSession': res.body.dataSession })
           .then(res => {
+            console.log(res.body);
             expect(res.body).toEqual({
               _id: expect.any(String),
-              piDataSessionId: dataSessionId.toString(),
+              piDataSessionId: dataSessionId,
               data: {
                 light:{
                   averageValue: 10, 
