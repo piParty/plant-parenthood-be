@@ -18,16 +18,16 @@ describe('integration test for pi', () => {
         city: 'Portland, OR'
       })
       .then(res => {
-        return token = res.headers['set-cookie'][0];
+        return token = res.headers['set-cookie'][0].split('=')[1].split(';')[0];
       })
       .then(async() =>  {
         //token correctly logs
         console.log(token);
-        return await thing();
+        return thing();
       });
 
     return userAgent
-      .get('/api/v1/get-data-points')
+      .get('/api/v1/pi-data-points')
       .then(res => {
         expect(res.body.length).toEqual(1);
       });
@@ -48,7 +48,7 @@ function thing() {
     .then(() => Promise.resolve(console.log('youre in'))
     )
     .then(function(){
-      return ssh.execCommand(`python3 ./piparty.py -c ${token} -s light`, {
+      return ssh.execCommand(`python3 ./piparty.py -c '${token}' -s light`, {
         cwd: '/home/pi/Documents'
       });
     })

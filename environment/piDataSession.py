@@ -21,7 +21,7 @@ def get_args():
     return args
 
 args = get_args()
-cookie = args.c
+cookie = dict('dataSession'=args.c)
 sensors = args.s.split(',')
 
 cycle_delay = 10
@@ -47,7 +47,7 @@ def get_temp_hum_readings():
 
 def post_data(data_bundle):
     # will eventually change to heroku server url
-    r = requests.post('http://192.168.1.232:7890/api/v1/pi-data-points',\
+    r = requests.post('http://192.168.1.203:7890/api/v1/pi-data-points',\
                         headers = { 'Content-Type': 'application/json' },\
                         cookies = cookie,\
                         data = json.dumps(data_bundle, default=str))
