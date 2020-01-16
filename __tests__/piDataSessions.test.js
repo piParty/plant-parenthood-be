@@ -1,16 +1,18 @@
 require('dotenv').config();
-const { userAgent, adminAgent, getPiDataSession } = require('../lib/helpers/data-helpers.js');
+const { userAgent, adminAgent, getPiDataSession, getUser, userTest } = require('../lib/helpers/data-helpers.js');
 
 const request = require('supertest');
 const app = require('../lib/app.js');
+console.log(userAgent, 'this is the user agent');
 
 describe('piDataSession route tests', () => {
   describe('tests for posting a new data session', () => {
-    it('should be able to post a new session', () => {
+    it('should be able to post a new session', async() => {
+      const user = await getUser({ email: 'user0@tess.com' });
       return userAgent
         .post('/api/v1/pi-data-sessions')
         .send({ 
-          piNickname: 'testPi', 
+          piNicknameId: user.myPis[0]._id, 
           sensorType: ['light'],
           piLocationInHouse: 'living room, east wall',
           city: 'Portland, Oregon'
@@ -19,7 +21,7 @@ describe('piDataSession route tests', () => {
           expect(res.header['set-cookie'][0]).toEqual(expect.stringContaining('dataSession='));
           expect(res.body).toEqual({
             _id: expect.any(String),
-            piNickname: 'testPi',
+            piNicknameId: user.myPis[0]._id.toString(),
             sensorType: ['light'],
             piLocationInHouse: 'living room, east wall',
             city: 'Portland, Oregon',
