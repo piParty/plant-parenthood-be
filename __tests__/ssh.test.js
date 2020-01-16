@@ -1,37 +1,34 @@
+const { userAgent } = require('../lib/helpers/data-helpers.js');
+
 const inquirer = require('inquirer');
-const User = require('./lib/models/User');
-const PiDataSession = require('./lib/models/PiDataSession');
-const superagent = require('superagent');
 const node_ssh = require('node-ssh');
 const ssh = new node_ssh();
-const connect = require('./lib/utils/connect')();
-let cookie;
 
-const user = await fetch('', {
-  'TYPE': 'Application/JSON',
-  'METHOD': 'POST'
-}, {
-    email: 'me@me.com',
-    password: 'password',
-    role: 'user',
-    myPis:[{ piNickname : 'testPi' }]
-  })
-//to make sure that the agent gets assigned a data session cookie!
-  .post('/api/v1/pi-data-sessions')
-  .send({
-    piNickname: 'happyPi', 
-    sensorType: ['light'], 
-    piLocationInHouse: 'kithcen', 
-    city: 'Portland, OR'
-  })
-  .then(res => {
-    return cookie = res.headers['set-cookie'][0];
-  })
-  .then(() =>  {
-    thing();
+let token;
+describe('integration test for pi', () => {
+  it('should be able to connect to the pi, get a sensor reading, and post it to the database', () => {
+
+    return userAgent
+    //to make sure that the agent gets assigned a data session cookie!
+      .post('/api/v1/pi-data-sessions')
+      .send({
+        piNickname: 'happyPi', 
+        sensorType: ['light'], 
+        piLocationInHouse: 'kithcen', 
+        city: 'Portland, OR'
+      })
+      .then(res => {
+        return token = res.headers['set-cookie'][0];
+      })
+      .then(() =>  {
+        //token correctly logs
+        console.log(token);
+        thing();
+      });
   });
+});
 
-const thing = () => {
+function thing() {
   return ssh.connect({
     host: 'blueberrymuffin',
     username : 'pi',
@@ -45,7 +42,7 @@ const thing = () => {
     .then(() => Promise.resolve(console.log('youre in'))
     )
     .then(function(){
-      return ssh.execCommand(`python3 ./piparty.py -c ${cookie} -s light`, {
+      return ssh.execCommand(`python3 ./piparty.py -c ${token} -s light`, {
         cwd: '/home/pi/Documents'
       });
     })
