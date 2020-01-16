@@ -21,7 +21,8 @@ def get_args():
     return args
 
 args = get_args()
-cookie = args.c
+token = args.c
+print(token)
 sensors = args.s.split(',')
 
 cycle_delay = 10
@@ -49,10 +50,11 @@ def post_data(data_bundle):
     # will eventually change to heroku server url
     r = requests.post('http://192.168.1.203:7890/api/v1/pi-data-points',\
                         headers = { 'Content-Type': 'application/json',\
-                        'dataSession': cookie },\
+                        'dataSession': token },\
                         data = json.dumps(data_bundle, default=str))
     print(r.status_code)
     print(r.text)
+    return r
 # cycle through data collection intervals
 
 for i in range(num_cycles):
@@ -93,6 +95,6 @@ for i in range(num_cycles):
         data_bundle["data"]["humidity"] = humidity_stats
         data_bundle["data"]["temperature"] = temperature_stats
     print(data_bundle)
-    post_data(data_bundle)
+    response = post_data(data_bundle)
     time.sleep(cycle_delay)
-    
+    return response

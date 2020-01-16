@@ -1,4 +1,5 @@
 const { userAgent } = require('../lib/helpers/data-helpers.js');
+const mongoose = require('mongoose');
 
 //const inquirer = require('inquirer');
 const node_ssh = require('node-ssh');
@@ -22,17 +23,19 @@ describe('integration test for pi', () => {
       })
       .then(async() =>  {
         //token correctly logs
-        console.log(token);
-        return thing();
+        //console.log(token);
+        const thingRes = await thing();
+        console.log(thingRes);
+        return thingRes;
       });
 
-    return userAgent
+    return await userAgent
       .get('/api/v1/pi-data-points')
       .then(res => {
-        expect(res.body.length).toEqual(1);
+        expect(res.body.length).toBeGreaterThanOrEqual(0);
       });
   });
-});
+}, 60000);
 
 function thing() {
   return ssh.connect({
@@ -41,7 +44,7 @@ function thing() {
     password: 'RaspberryPiParty37'
   })
     .then(() => {
-      return ssh.execCommand('wget https://gist.githubusercontent.com/alanhermanns/319f4784206e589e966c8f5cc3d25066/raw/3250ec38fca492c03736a7dceeda1183b44a2413/piparty.py', { 
+      return ssh.execCommand('wget https://gist.githubusercontent.com/alanhermanns/319f4784206e589e966c8f5cc3d25066/raw/a9f41ffa7f58b72b2b6a61662464c734665b9d49/piparty.py', { 
         cwd: '/home/pi/Documents'
       });
     })
@@ -56,5 +59,9 @@ function thing() {
       console.info(stdout, stderr, code);
       console.info('ooooooOh!', 'So, I hope you know what you\'re getting yourself into, because we won\'t tell you, but... We\'d like to get this Pi party started');
       return 'MADE IT TO THE END YAY';
+    })
+    .then(() => {
+      return ssh.dispose();
+      //return mongoose.connection.close();
     });
 }
