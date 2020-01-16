@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { userAgent, getUser, getPiDataSession } = require('../lib/helpers/data-helpers.js');
+const { userAgent, adminAgent, getPiDataSession } = require('../lib/helpers/data-helpers.js');
 
 const request = require('supertest');
 const app = require('../lib/app.js');
@@ -75,7 +75,7 @@ describe('piDataSession route tests', () => {
   it('should be able to get all dataSessions', async() => {
     const sessions = [await getPiDataSession(), await getPiDataSession()];
 
-    return userAgent
+    return adminAgent
       .get('/api/v1/pi-data-sessions')
       .then(res => {
         sessions.forEach(session => {
