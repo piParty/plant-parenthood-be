@@ -3,7 +3,6 @@ const { userAgent, adminAgent, getPiDataSession, getUser, userTest } = require('
 
 const request = require('supertest');
 const app = require('../lib/app.js');
-console.log(userAgent, 'this is the user agent');
 
 describe('piDataSession route tests', () => {
   describe('tests for posting a new data session', () => {
@@ -45,14 +44,15 @@ describe('piDataSession route tests', () => {
 
   describe('piDataSession tests for getting piDataSession by ID', () => {
     it('should be able to get a dataSession by ID', async() => {
-      const session = await getPiDataSession();
-      
+      const user = await getUser({ email: 'user0@tess.com' });
+      const session = await getPiDataSession({ piNicknameId: user.myPis[0]._id });
+
       return userAgent
         .get(`/api/v1/pi-data-sessions/${session._id}`)
         .then(res => {
           expect(res.body).toEqual({
             _id: session._id.toString(),
-            piNickname: session.piNickname,
+            piNicknameId: user.myPis[0]._id,
             sensorType: ['light'],
             piLocationInHouse: session.piLocationInHouse,
             city: session.city,
