@@ -1,13 +1,11 @@
 require('dotenv').config();
-
-const { getPiDataPoint, getPiDataSession, userAgent } = require('../lib/helpers/data-helpers');
-const request = require('supertest');
-const app = require('../lib/app');
-
+const PiDataPoint = require('../lib/models/PiDataPoint.js');
+const { getPiDataSession, userAgent } = require('../lib/helpers/data-helpers');
 
 describe('piDataPoint route tests', () => {
+
   it('(the pi) should be able to verify a session and post a data point using this route', () => {
- 
+
     let dataSessionId;
     return userAgent
     //to make sure that the agent gets assigned a data session cookie!
@@ -49,6 +47,30 @@ describe('piDataPoint route tests', () => {
             });
           });
       });
-      
+  });
+
+  it('should be able to get all data points', async() => {
+    const session = await getPiDataSession();
+    const dataPoint = await PiDataPoint.create({
+      piDataSessionId: session._id,
+      data: {
+        light: { averageValue: 10, standardDeviation: 9999 }
+      },
+      piTimestamp: Date.now()
+    });
+
+    return userAgent
+      .get('/api/v1/pi-data-points/')
+      .then(res => {
+        expect(res.body).toEqual([{
+          _id: expect.any(String),
+          piDataSessionId: session._id,
+          data: {
+            light: { averageValue: 10, standardDeviation: 9999 }
+          },
+          piTimestamp: expect.any(String),
+          __v: 0
+        }]);
+      });
   });
 });

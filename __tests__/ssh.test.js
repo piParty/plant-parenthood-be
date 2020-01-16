@@ -23,7 +23,7 @@ describe('integration test for pi', () => {
       .then(() =>  {
         //token correctly logs
         console.log(token);
-        thing();
+        //thing();
       });
   });
 });
