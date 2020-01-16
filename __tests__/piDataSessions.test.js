@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { userAgent, adminAgent, getPiDataSession, getUser, userTest } = require('../lib/helpers/data-helpers.js');
+const { userAgent, adminAgent, getPiDataSession, getUser } = require('../lib/helpers/data-helpers.js');
 
 const request = require('supertest');
 const app = require('../lib/app.js');
@@ -46,7 +46,6 @@ describe('piDataSession route tests', () => {
     it('should be able to get a dataSession by ID', async() => {
       const user = await getUser({ email: 'user0@tess.com' });
       const session = await getPiDataSession({ piNicknameId: user.myPis[0]._id });
-      console.log(session, 'this is the session');
       return userAgent
         .get(`/api/v1/pi-data-sessions/${session._id}`)
         .then(res => {
@@ -77,7 +76,6 @@ describe('piDataSession route tests', () => {
   describe('piDataSession tests for get all data sessions route', () => {
     it('should be able to get all dataSessions', async() => {
       const admin = await getUser({ email: 'admin0@tess.com' });
-      console.log(admin, 'this is the admin');
       const sessions = [await getPiDataSession({ piNicknameId: admin.myPis[0]._id }), await getPiDataSession({ piNicknameId: admin.myPis[0]._id })];
 
       return adminAgent
@@ -147,15 +145,16 @@ describe('piDataSession route tests', () => {
 
   describe('piDataSession tests for updating route', () => {
     it('should be able to update a data session', async() => {
-      const session = await getPiDataSession();
+      const user = await getUser({ email: 'user0@tess.com' });
+      const session = await getPiDataSession({ piNicknameId: user.myPis[0]._id });
       return userAgent
         .patch(`/api/v1/pi-data-sessions/${session._id}`)
-        .send({ sensorType: ['light'] })
+        .send({ sensorType: ['temperature'] })
         .then(res => {
           expect(res.body).toEqual({
             _id: session._id,
-            piNickname: session.piNickname,
-            sensorType: ['light'],
+            piNicknameId: user.myPis[0]._id,
+            sensorType: ['temperature'],
             piLocationInHouse: session.piLocationInHouse,
             city: session.city,
             __v: 0
@@ -189,13 +188,14 @@ describe('piDataSession route tests', () => {
 
   describe('piDataSession tests for delete routes', () => {
     it('should be able to delete a dataSession', async() => {
-      const session = await getPiDataSession();
+      const user = await getUser({ email: 'user0@tess.com' });
+      const session = await getPiDataSession({ piNicknameId: user.myPis[0]._id });
       return userAgent
         .delete(`/api/v1/pi-data-sessions/${session._id}`)
         .then(res => {
           expect(res.body).toEqual({
             _id: expect.any(String),
-            piNickname: session.piNickname,
+            piNicknameId: user.myPis[0]._id,
             sensorType: session.sensorType,
             piLocationInHouse: session.piLocationInHouse,
             city: session.city,
