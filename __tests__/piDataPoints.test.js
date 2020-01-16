@@ -56,15 +56,7 @@ describe('piDataPoint route tests', () => {
 
   it('should be able to get all data points', async() => {
     const session = await getPiDataSession();
-    // const dataPoint = await PiDataPoint.create({
-    //   piDataSessionId: session._id,
-    //   data: {
-    //     light: { averageValue: 10, standardDeviation: 9999 }
-    //   },
-    //   piTimestamp: Date.now()
-    // });
     const dataPoints = await getPiDataPoints({ piDataSessionId: session._id });
-    console.log(dataPoints);
 
     return userAgent
       .get('/api/v1/pi-data-points/')
