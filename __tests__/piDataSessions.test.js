@@ -73,13 +73,7 @@ describe('piDataSession route tests', () => {
   });
 
   it('should be able to get all dataSessions', async() => {
-    const sessions = await PiDataSession.create([
-      { piNickname: 'test1', sensorType: ['light'], piLocationInHouse: 'east', city: 'Here' },
-      { piNickname: 'test2', sensorType: ['light'], piLocationInHouse: 'west', city: 'There' },
-      { piNickname: 'test3', sensorType: ['light'], piLocationInHouse: 'kitchen', city: 'anywhere' }
-    ]);
-
-
+    const sessions = [await getPiDataSession(), await getPiDataSession()];
 
     return userAgent
       .get('/api/v1/pi-data-sessions')
