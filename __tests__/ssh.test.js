@@ -1,14 +1,14 @@
 const { userAgent } = require('../lib/helpers/data-helpers.js');
 
-const inquirer = require('inquirer');
+//const inquirer = require('inquirer');
 const node_ssh = require('node-ssh');
 const ssh = new node_ssh();
 
 let token;
 describe('integration test for pi', () => {
-  it('should be able to connect to the pi, get a sensor reading, and post it to the database', () => {
+  it('should be able to connect to the pi, get a sensor reading, and post it to the database', async() => {
 
-    return userAgent
+    await userAgent
     //to make sure that the agent gets assigned a data session cookie!
       .post('/api/v1/pi-data-sessions')
       .send({
@@ -20,10 +20,16 @@ describe('integration test for pi', () => {
       .then(res => {
         return token = res.headers['set-cookie'][0];
       })
-      .then(() =>  {
+      .then(async() =>  {
         //token correctly logs
         console.log(token);
-        //thing();
+        return await thing();
+      });
+
+    return userAgent
+      .get('/api/v1/get-data-points')
+      .then(res => {
+        expect(res.body.length).toEqual(1);
       });
   });
 });
@@ -49,5 +55,6 @@ function thing() {
     .then(function({ stderr, stdout, code }){
       console.info(stdout, stderr, code);
       console.info('ooooooOh!', 'So, I hope you know what you\'re getting yourself into, because we won\'t tell you, but... We\'d like to get this Pi party started');
+      return 'MADE IT TO THE END YAY';
     });
 }
