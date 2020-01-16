@@ -44,7 +44,7 @@
 //     password: 'RaspberryPiParty37'
 //   })
 //     .then(() => {
-//       return ssh.execCommand('wget https://gist.githubusercontent.com/alanhermanns/319f4784206e589e966c8f5cc3d25066/raw/a9f41ffa7f58b72b2b6a61662464c734665b9d49/piparty.py', { 
+//       return ssh.execCommand('wget https://raw.githubusercontent.com/piParty/pi-party/dev/environment/pi_data_session.py', { 
 //         cwd: '/home/pi/Documents'
 //       });
 //     })
