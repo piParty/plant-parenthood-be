@@ -1,9 +1,9 @@
 require('dotenv').config();
 const { userAgent, getUser, getPiDataSession } = require('../lib/helpers/data-helpers.js');
-const connect = require('../lib/utils/connect.js');
+
 const request = require('supertest');
 const app = require('../lib/app.js');
-const mongoose = require('mongoose');
+
 const PiDataSession = require('../lib/models/PiDataSession.js');
 
 
@@ -44,23 +44,17 @@ describe('piDataSession route tests', () => {
   });
 
   it('should be able to get a dataSession by ID', async() => {
-    //refactor
-    const session = await PiDataSession.create({ 
-      piNickname: 'testPi', 
-      sensorType: ['light'],
-      piLocationInHouse: 'living room, east wall',
-      city: 'Portland, Oregon'
-    });
+    const session = await getPiDataSession();
     
     return userAgent
       .get(`/api/v1/pi-data-sessions/${session._id}`)
       .then(res => {
         expect(res.body).toEqual({
           _id: session._id.toString(),
-          piNickname: 'testPi',
+          piNickname: session.piNickname,
           sensorType: ['light'],
-          piLocationInHouse: 'living room, east wall',
-          city: 'Portland, Oregon',
+          piLocationInHouse: session.piLocationInHouse,
+          city: session.city,
           __v: 0
         });
       });
@@ -84,6 +78,8 @@ describe('piDataSession route tests', () => {
       { piNickname: 'test2', sensorType: ['light'], piLocationInHouse: 'west', city: 'There' },
       { piNickname: 'test3', sensorType: ['light'], piLocationInHouse: 'kitchen', city: 'anywhere' }
     ]);
+
+
 
     return userAgent
       .get('/api/v1/pi-data-sessions')
