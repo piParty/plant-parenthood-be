@@ -50,4 +50,4 @@ function thing() {
       console.info(stdout, stderr, code);
       console.info('ooooooOh!', 'So, I hope you know what you\'re getting yourself into, because we won\'t tell you, but... We\'d like to get this Pi party started');
     });
-};
+}
