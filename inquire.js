@@ -100,6 +100,11 @@ inquirer
                       message : 'what is your pi\'s IP Address?'
                     },
                     {
+                      type: 'password',
+                      name: 'password',
+                      message: 'Enter the password for your Pi.'
+                    },
+                    {
                       name: 'nickName',
                       message: 'Give your Pi a nick name. This will be used for authentication purposes.'
                     },
@@ -140,12 +145,43 @@ inquirer
                   });
               }
               if(answers.loginOptions === 'Log Out'){
-                superagent('<patch session route>', {
+                superagent('<log out route>', {
                   'TYPE': 'Application/JSON',
                   'METHOD': 'POST'
                 })
                   .then(function(){
                     console.log('You\'re logged out.');
+                  });
+              }
+              if(answers.loginOptions === 'Stop Your Session'){
+                inquirer
+                  .prompt([
+                    {
+                      name : 'userName',
+                      message :`You want to grow a plant.
+                          What is your Pi's Username?`
+                    },
+                    {
+                      name: 'IPAddress',
+                      message : 'what is your pi\'s IP Address?'
+                    },
+                    {
+                      type: 'password',
+                      name: 'password',
+                      message: 'Enter the password for your Pi.'
+                    },
+                  ])
+                  .then(answers => {
+                    ssh.connect({
+                      host: answers.IPAddress,
+                      username : answers.userName,
+                      password: answers.password
+                    })
+                      .then(function(){
+                        ssh.execCommand('KILL piparty.py', {
+                          cwd: '/home/pi/Documents'
+                        });
+                      });
                   });
               }
             });
@@ -165,7 +201,7 @@ inquirer
           }
         ])
         .then(async answers => {
-          const user = await superagent('<login route>', {
+          const user = await superagent('<signup route>', {
             'TYPE': 'Application/JSON',
             'METHOD': 'POST'
           }, { 
