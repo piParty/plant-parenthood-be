@@ -112,21 +112,30 @@ describe('piDataSession route tests', () => {
       });
   });
 
-  //shouldn't work because Gamma Ray is not part of the enum on the model
   it('should be able to update a data session', async() => {
     const session = await getPiDataSession();
     return userAgent
       .patch(`/api/v1/pi-data-sessions/${session._id}`)
-      .send({ sensorType: ['Gamma Ray'] })
+      .send({ sensorType: ['light'] })
       .then(res => {
         expect(res.body).toEqual({
           _id: session._id,
           piNickname: session.piNickname,
-          sensorType: ['Gamma Ray'],
+          sensorType: ['light'],
           piLocationInHouse: session.piLocationInHouse,
           city: session.city,
           __v: 0
         });
+      });
+  });
+
+  it('should be not update a data session with a sensor type that is not valid', async() => {
+    const session = await getPiDataSession();
+    return userAgent
+      .patch(`/api/v1/pi-data-sessions/${session._id}`)
+      .send({ sensorType: ['gamma-ray'] })
+      .then(res => {
+        expect(res.body.message).toEqual('Validation failed: sensorType.0: `gamma-ray` is not a valid enum value for path `sensorType.$`.');
       });
   });
 
