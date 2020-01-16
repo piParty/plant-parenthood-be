@@ -24,7 +24,7 @@
 //       .then(async() =>  {
 //         //token correctly logs
 //         //console.log(token);
-//         const thingRes = await thing();
+//         const thingRes = await sshConnect();
 //         console.log(thingRes);
 //         return thingRes;
 //       });
@@ -37,7 +37,7 @@
 //   });
 // }, 60000);
 
-// function thing() {
+// function sshConnect() {
 //   return ssh.connect({
 //     host: 'blueberrymuffin',
 //     username : 'pi',
@@ -69,5 +69,5 @@
 describe('meaningless test', () => {
   it('should pass', () => {
     expect(true).toEqual(true);
-  })
-})
+  });
+});
