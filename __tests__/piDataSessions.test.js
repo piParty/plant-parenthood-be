@@ -91,6 +91,17 @@ describe('piDataSession route tests', () => {
       });
   });
 
+  // it('should throw an error if a user tries to get all dataSessions instead of being an admin', () => {
+  //   return request(app)
+  //     .get('/api/v1/pi-data-sessions/')
+  //     .then(res => {
+  //       expect(res.body).toEqual({
+  //         message: 'Login required.',
+  //         status: 403
+  //       });
+  //     });
+  // });
+
   it('should throw an error if a user tries to get all dataSessions without being logged in', () => {
     return request(app)
       .get('/api/v1/pi-data-sessions/')
