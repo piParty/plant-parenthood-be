@@ -1,9 +1,9 @@
 require('dotenv').config();
-const { userAgent, getUser, getPiDataSession } = require('../lib/helpers/data-helpers.js');
-const connect = require('../lib/utils/connect.js');
+const { userAgent, adminAgent, getPiDataSession } = require('../lib/helpers/data-helpers.js');
+
 const request = require('supertest');
 const app = require('../lib/app.js');
-const mongoose = require('mongoose');
+
 const PiDataSession = require('../lib/models/PiDataSession.js');
 
 
@@ -44,23 +44,17 @@ describe('piDataSession route tests', () => {
   });
 
   it('should be able to get a dataSession by ID', async() => {
-    //refactor
-    const session = await PiDataSession.create({ 
-      piNickname: 'testPi', 
-      sensorType: ['light'],
-      piLocationInHouse: 'living room, east wall',
-      city: 'Portland, Oregon'
-    });
+    const session = await getPiDataSession();
     
     return userAgent
       .get(`/api/v1/pi-data-sessions/${session._id}`)
       .then(res => {
         expect(res.body).toEqual({
           _id: session._id.toString(),
-          piNickname: 'testPi',
+          piNickname: session.piNickname,
           sensorType: ['light'],
-          piLocationInHouse: 'living room, east wall',
-          city: 'Portland, Oregon',
+          piLocationInHouse: session.piLocationInHouse,
+          city: session.city,
           __v: 0
         });
       });
@@ -79,13 +73,9 @@ describe('piDataSession route tests', () => {
   });
 
   it('should be able to get all dataSessions', async() => {
-    const sessions = await PiDataSession.create([
-      { piNickname: 'test1', sensorType: ['light'], piLocationInHouse: 'east', city: 'Here' },
-      { piNickname: 'test2', sensorType: ['light'], piLocationInHouse: 'west', city: 'There' },
-      { piNickname: 'test3', sensorType: ['light'], piLocationInHouse: 'kitchen', city: 'anywhere' }
-    ]);
+    const sessions = [await getPiDataSession(), await getPiDataSession()];
 
-    return userAgent
+    return adminAgent
       .get('/api/v1/pi-data-sessions')
       .then(res => {
         sessions.forEach(session => {
@@ -101,6 +91,17 @@ describe('piDataSession route tests', () => {
       });
   });
 
+  it('should throw an error if a user tries to get all dataSessions instead of being an admin', () => {
+    return userAgent
+      .get('/api/v1/pi-data-sessions/')
+      .then(res => {
+        expect(res.body).toEqual({
+          message: 'Admin role required.',
+          status: 403
+        });
+      });
+  });
+
   it('should throw an error if a user tries to get all dataSessions without being logged in', () => {
     return request(app)
       .get('/api/v1/pi-data-sessions/')
@@ -112,21 +113,30 @@ describe('piDataSession route tests', () => {
       });
   });
 
-  //shouldn't work because Gamma Ray is not part of the enum on the model
   it('should be able to update a data session', async() => {
     const session = await getPiDataSession();
     return userAgent
       .patch(`/api/v1/pi-data-sessions/${session._id}`)
-      .send({ sensorType: ['Gamma Ray'] })
+      .send({ sensorType: ['light'] })
       .then(res => {
         expect(res.body).toEqual({
           _id: session._id,
           piNickname: session.piNickname,
-          sensorType: ['Gamma Ray'],
+          sensorType: ['light'],
           piLocationInHouse: session.piLocationInHouse,
           city: session.city,
           __v: 0
         });
+      });
+  });
+
+  it('should be not update a data session with a sensor type that is not valid', async() => {
+    const session = await getPiDataSession();
+    return userAgent
+      .patch(`/api/v1/pi-data-sessions/${session._id}`)
+      .send({ sensorType: ['gamma-ray'] })
+      .then(res => {
+        expect(res.body.message).toEqual('Validation failed: sensorType.0: `gamma-ray` is not a valid enum value for path `sensorType.$`.');
       });
   });
 
