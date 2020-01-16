@@ -14,7 +14,7 @@ describe('piDataPoint route tests', () => {
     //to make sure that the agent gets assigned a data session token!
       .post('/api/v1/pi-data-sessions')
       .send({
-        piNicknameId: user.myPis[0]._id , 
+        piNicknameId: user.myPis[0]._id, 
         sensorType: ['light'], 
         piLocationInHouse: 'kithcen', 
         city: 'Portland, OR'

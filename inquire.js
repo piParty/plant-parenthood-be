@@ -57,7 +57,7 @@ inquirer
                 type: 'list',
                 name: 'loginOptions',
                 message: 'Would you like to...',
-                choices: ['Get a Pi\'s session data', 'Ammend a Session', 'Post a Session', 'Log Out']
+                choices: ['Get a Pi\'s session data', 'Ammend a Session', 'Post a Session', 'Log Out', 'Stop Your Session']
               }
             ])
             .then(async answers => {
