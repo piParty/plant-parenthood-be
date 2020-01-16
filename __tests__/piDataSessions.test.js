@@ -46,7 +46,7 @@ describe('piDataSession route tests', () => {
     it('should be able to get a dataSession by ID', async() => {
       const user = await getUser({ email: 'user0@tess.com' });
       const session = await getPiDataSession({ piNicknameId: user.myPis[0]._id });
-
+      console.log(session, 'this is the session');
       return userAgent
         .get(`/api/v1/pi-data-sessions/${session._id}`)
         .then(res => {
@@ -76,7 +76,9 @@ describe('piDataSession route tests', () => {
 
   describe('piDataSession tests for get all data sessions route', () => {
     it('should be able to get all dataSessions', async() => {
-      const sessions = [await getPiDataSession(), await getPiDataSession()];
+      const admin = await getUser({ email: 'admin0@tess.com' });
+      console.log(admin, 'this is the admin');
+      const sessions = [await getPiDataSession({ piNicknameId: admin.myPis[0]._id }), await getPiDataSession({ piNicknameId: admin.myPis[0]._id })];
 
       return adminAgent
         .get('/api/v1/pi-data-sessions')
@@ -84,7 +86,7 @@ describe('piDataSession route tests', () => {
           sessions.forEach(session => {
             expect(res.body).toContainEqual({
               _id: session._id.toString(),
-              piNickname: session.piNickname,
+              piNicknameId: expect.any(String),
               sensorType: ['light'],
               piLocationInHouse: session.piLocationInHouse,
               city: session.city,
