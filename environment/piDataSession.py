@@ -24,10 +24,10 @@ args = get_args()
 cookie = args.c
 sensors = args.s.split(',')
 
-cycle_delay = 10
-num_cycles = 2
-reading_interval = 1
-num_readings = 3
+cycle_delay = 1000
+num_cycles = 10
+reading_interval = 2
+num_readings = 200
 
 if "light" in sensors:
     spi = spidev.SpiDev()
