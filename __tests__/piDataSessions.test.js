@@ -115,6 +115,32 @@ describe('piDataSession route tests', () => {
     });
   });
 
+  describe('piDataSession tests for getting all data sessions by user', () => {
+    it('should be able to get all piDataSessions by user', () => {
+      let dataSessionId1;
+      let dataSessionId2;
+      return userAgent
+        // this user needs to post to a datasession
+        .post('/api/v1/pi-data-sessions')
+        .send({ piNickname: 'happyPi', sensorType: 'light', piLocationInHouse: 'kitchen', city: 'Portland' })
+        .then(res => {
+          dataSessionId1 = res.body._id;
+          return userAgent
+            .post('/api/v1/pi-data-sessions')
+            .send({ piNickname: 'happyPi', sensorType: 'light', piLocationInHouse: 'living room', city: 'Portland' })
+            .then(res => {
+              dataSessionId2 = res.body._id;
+              console.log(dataSessionId1, dataSessionId2);
+              return userAgent
+                .get('/api/v1/pi-data-sessions/user-sessions')
+                .then(res => {
+                  expect(res.body).toEqual([{}, {}]);
+                });
+            });
+        });
+    });
+  });
+
   describe('piDataSession tests for updating route', () => {
     it('should be able to update a data session', async() => {
       const session = await getPiDataSession();
