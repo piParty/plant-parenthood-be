@@ -96,6 +96,21 @@ describe('auth and user routes', () => {
       });
   });
 
+  it('can update a users Pis', async() => {
+    const userInfoOfAgent = await getUser({ email:'user0@tess.com' })
+    const initialPis = userInfoOfAgent.myPis;
+    console.log(...initialPis);
+    return userAgent
+      .patch(`/api/v1/auth/${userAgent._id}`)
+      .send({ piNickname: 'mySecondPi' })
+      .then(res => {
+        expect(res.body).toEqual({
+          ...userInfoOfAgent,
+          myPis: [...initialPis, { piNickname: 'mySecondPi' }]
+        });
+      });
+  });
+
   it('should throw an error when a user tries to delete a user', async() => {
     const deleteMe = await getUser();
 
