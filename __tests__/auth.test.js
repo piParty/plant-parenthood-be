@@ -1,5 +1,4 @@
 require('dotenv').config();
-
 const { getUser, userAgent, adminAgent } = require('../lib/helpers/data-helpers');
 const request = require('supertest');
 const app = require('../lib/app');
@@ -79,7 +78,8 @@ describe('auth and user routes', () => {
         expect(res.header['set-cookie'][0]).toEqual(expect.stringContaining('session=;'));
       });
   });
-//check that existing pis are not deleted
+
+  //check that existing pis are not deleted
   it('can patch a user', async() => {
     const user = await getUser();
     return request(app)
@@ -97,16 +97,15 @@ describe('auth and user routes', () => {
   });
 
   it('can update a users Pis', async() => {
-    const userInfoOfAgent = await getUser({ email:'user0@tess.com' })
+    const userInfoOfAgent = await getUser({ email:'user0@tess.com' });
     const initialPis = userInfoOfAgent.myPis;
-    console.log(...initialPis);
     return userAgent
-      .patch(`/api/v1/auth/${userAgent._id}`)
+      .patch(`/api/v1/auth/myPis/${userInfoOfAgent._id}`)
       .send({ piNickname: 'mySecondPi' })
       .then(res => {
         expect(res.body).toEqual({
           ...userInfoOfAgent,
-          myPis: [...initialPis, { piNickname: 'mySecondPi' }]
+          myPis: [...initialPis, { _id: expect.any(String), piNickname: 'mySecondPi' }]
         });
       });
   });
