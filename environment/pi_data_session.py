@@ -25,8 +25,8 @@ token = args.c
 print(token)
 sensors = args.s.split(',')
 
-reading_interval = 2
-num_readings = 60
+reading_interval = 1
+num_readings = 30
 
 if "light" in sensors:
     spi = spidev.SpiDev()
@@ -46,7 +46,7 @@ def get_temp_hum_readings():
 
 def post_data(data_bundle):
     # will eventually change to heroku server url
-    r = requests.post('http://192.168.1.203:7890/api/v1/pi-data-points',\
+    r = requests.post('https://plantonomous.herokuapp.com/api/v1/pi-data-points',\
                         headers = { 'Content-Type': 'application/json',\
                         'dataSession': token },\
                         data = json.dumps(data_bundle, default=str))
@@ -55,41 +55,42 @@ def post_data(data_bundle):
     return r
 
 # read value and post data bundle to server
-if "light" in sensors:
-    light_data = np.zeros(num_readings)
-if "temperature/humidity" in sensors:
-    temperature_data = np.zeros(num_readings)
-    humidity_data = np.zeros(num_readings)
-for j in range(num_readings):
+while(True):
     if "light" in sensors:
-        light_level = get_light_reading()
-        light_data[j] = light_level
-        light_stats = {
-        "averageValue": np.average(light_data),
-        "standardDeviation": np.std(light_data)
-        }
+        light_data = np.zeros(num_readings)
     if "temperature/humidity" in sensors:
-        humidity, temperature = get_temp_hum_readings()
-        humidity_data[j] = humidity
-        temperature_data[j] = temperature
-        humidity_stats = {
-        "averageValue": np.average(humidity_data),
-        "standardDeviation": np.std(humidity_data)
+        temperature_data = np.zeros(num_readings)
+        humidity_data = np.zeros(num_readings)
+    for j in range(num_readings):
+        if "light" in sensors:
+            light_level = get_light_reading()
+            light_data[j] = light_level
+            light_stats = {
+            "averageValue": np.average(light_data),
+            "standardDeviation": np.std(light_data)
+            }
+        if "temperature/humidity" in sensors:
+            humidity, temperature = get_temp_hum_readings()
+            humidity_data[j] = humidity
+            temperature_data[j] = temperature
+            humidity_stats = {
+            "averageValue": np.average(humidity_data),
+            "standardDeviation": np.std(humidity_data)
+            }
+            temperature_stats = {
+            "averageValue": np.average(temperature_data),
+            "standardDeviation": np.std(temperature_data)
+            }
+        time.sleep(reading_interval)
+    data_bundle = {
+        "data": {},
+        "piTimestamp": datetime.now()
         }
-        temperature_stats = {
-        "averageValue": np.average(temperature_data),
-        "standardDeviation": np.std(temperature_data)
-        }
-    time.sleep(reading_interval)
-data_bundle = {
-    "data": {},
-    "piTimestamp": datetime.now()
-    }
-if "light" in sensors:
-    data_bundle["data"]["light"] = light_stats
-if "temperature/humidity" in sensors:
-    data_bundle["data"]["humidity"] = humidity_stats
-    data_bundle["data"]["temperature"] = temperature_stats
-print("Reading frequency: 0.5 hZ.  Number of readings: 60.  Results: {} ".format(data_bundle))
-response = post_data(data_bundle)
-print("Posted to pi-party database: {}".format(response))
+    if "light" in sensors:
+        data_bundle["data"]["light"] = light_stats
+    if "temperature/humidity" in sensors:
+        data_bundle["data"]["humidity"] = humidity_stats
+        data_bundle["data"]["temperature"] = temperature_stats
+    print("Reading frequency: 1.0 hZ.  Number of readings: 30.  Results: {} ".format(data_bundle))
+    response = post_data(data_bundle)
+    print("Posted to pi-party database: {}".format(response))
