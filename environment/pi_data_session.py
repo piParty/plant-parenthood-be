@@ -46,7 +46,7 @@ def get_temp_hum_readings():
 
 def post_data(data_bundle):
     # will eventually change to heroku server url
-    r = requests.post('http://192.168.1.203:7890/api/v1/pi-data-points',\
+    r = requests.post('https://plantonomous.herokuapp.com/api/v1/pi-data-points',\
                         headers = { 'Content-Type': 'application/json',\
                         'dataSession': token },\
                         data = json.dumps(data_bundle, default=str))
