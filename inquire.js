@@ -222,7 +222,7 @@ inquirer
             password: answers.password
           })
             .then(function(){
-              ssh.execCommand('wget (link to gist python script)', {
+              ssh.execCommand('wget https://raw.githubusercontent.com/piParty/pi-party/dev/environment/pi_data_session.py', {
                 onStderr(err){
                   console.log(err + 'Try again');
                 }
