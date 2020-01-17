@@ -67,6 +67,20 @@ describe('plant route tests', () => {
       });
   });
 
+  it('deletes a plant by id', async() => {
+    const plant = await getPlant();
+    return adminAgent
+      .delete(`/api/v1/plants/${plant._id}`)
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          commonName: plant.commonName,
+          sunlightPreference: plant.sunlightPreference,
+          __v: 0
+        });
+      });
+  });
+
 
 
 });
