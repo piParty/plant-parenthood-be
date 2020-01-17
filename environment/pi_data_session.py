@@ -25,10 +25,8 @@ token = args.c
 print(token)
 sensors = args.s.split(',')
 
-cycle_delay = 1000
-num_cycles = 10
-reading_interval = 2
-num_readings = 200
+reading_interval = 1
+num_readings = 30
 
 if "light" in sensors:
     spi = spidev.SpiDev()
@@ -41,24 +39,23 @@ def get_light_reading():
     return data
     
 def get_temp_hum_readings():
-    sensor = Adafruit_DHT.DHT11
+    sensor = Adafruit_DHT.DHT22
     gpio = 17
     
     return Adafruit_DHT.read_retry(sensor, gpio)
 
 def post_data(data_bundle):
     # will eventually change to heroku server url
-    r = requests.post('http://192.168.1.203:7890/api/v1/pi-data-points',\
+    r = requests.post('https://plantonomous.herokuapp.com/api/v1/pi-data-points',\
                         headers = { 'Content-Type': 'application/json',\
                         'dataSession': token },\
                         data = json.dumps(data_bundle, default=str))
     print(r.status_code)
     print(r.text)
     return r
-# cycle through data collection intervals
 
-for i in range(num_cycles):
-    # read value and post data bundle to server
+# read value and post data bundle to server
+while(True):
     if "light" in sensors:
         light_data = np.zeros(num_readings)
     if "temperature/humidity" in sensors:
@@ -94,7 +91,6 @@ for i in range(num_cycles):
     if "temperature/humidity" in sensors:
         data_bundle["data"]["humidity"] = humidity_stats
         data_bundle["data"]["temperature"] = temperature_stats
-    print(data_bundle)
+    print("Reading frequency: 1.0 hZ.  Number of readings: 30.  Results: {} ".format(data_bundle))
     response = post_data(data_bundle)
-    time.sleep(cycle_delay)
-    return response
+    print("Posted to pi-party database: {}".format(response))
