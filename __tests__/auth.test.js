@@ -1,5 +1,4 @@
 require('dotenv').config();
-
 const { getUser, userAgent, adminAgent } = require('../lib/helpers/data-helpers');
 const request = require('supertest');
 const app = require('../lib/app');
@@ -80,19 +79,16 @@ describe('auth and user routes', () => {
       });
   });
 
-  //vanilla patch route (will be deleted)
-  it('can patch a user', async() => {
-    const user = await getUser();
-    return request(app)
-      .patch(`/api/v1/auth/${user._id}`)
-      .send({ password: 'notPasswordAnymore', myPis: { piNickname: 'MyFirstPi' } })
+  it('can update a users Pis', async() => {
+    const userInfoOfAgent = await getUser({ email:'user0@tess.com' });
+    const initialPis = userInfoOfAgent.myPis;
+    return userAgent
+      .patch(`/api/v1/auth/myPis/${userInfoOfAgent._id}`)
+      .send({ piNickname: 'mySecondPi' })
       .then(res => {
         expect(res.body).toEqual({
-          _id: user._id.toString(),
-          email: user.email,
-          role: 'user',
-          myPis: [{ _id: expect.any(String), piNickname: 'MyFirstPi' }],
-          __v: 0
+          ...userInfoOfAgent,
+          myPis: [...initialPis, { _id: expect.any(String), piNickname: 'mySecondPi' }]
         });
       });
   });

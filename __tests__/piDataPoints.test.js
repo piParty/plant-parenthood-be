@@ -1,9 +1,6 @@
 require('dotenv').config();
 
 const { getPiDataPoints, getPiDataSession, userAgent, getUser } = require('../lib/helpers/data-helpers');
-const request = require('supertest');
-const app = require('../lib/app');
-
 
 describe('piDataPoint route tests', () => {
   it('(the pi) should be able to verify a session and post a data point using this route', async() => {
@@ -20,6 +17,7 @@ describe('piDataPoint route tests', () => {
         city: 'Portland, OR'
       })
       .then(res=> {
+        console.log(res.body);
         dataSessionId = res.body._id;
         //tokens persist, so this userAgent has the dataSession
         return userAgent
@@ -39,7 +37,7 @@ describe('piDataPoint route tests', () => {
           .then(res => {
             expect(res.body).toEqual({
               _id: expect.any(String),
-              piDataSessionId: dataSessionId,
+              piDataSessionId: dataSessionId.toString(),
               data: {
                 light:{
                   averageValue: 10, 
