@@ -1,5 +1,4 @@
 require('dotenv').config();
-
 const { getPiDataPoints, getPiDataSession, userAgent, getUser } = require('../lib/helpers/data-helpers');
 
 describe('piDataPoint route tests', () => {
@@ -8,7 +7,7 @@ describe('piDataPoint route tests', () => {
 
     let dataSessionId;
     return userAgent
-    //to make sure that the agent gets assigned a data session token!
+      //to make sure that the agent gets assigned a data session token!
       .post('/api/v1/pi-data-sessions')
       .send({
         piNicknameId: user.myPis[0]._id, 
@@ -21,7 +20,7 @@ describe('piDataPoint route tests', () => {
         //tokens persist, so this userAgent has the dataSession
         return userAgent
           .post('/api/v1/pi-data-points') 
-        //shape of data has to look like what the pi is sending
+          //shape of data has to look like what the pi is sending
           .send({
             data: { 
               light: {
