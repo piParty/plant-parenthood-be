@@ -79,7 +79,8 @@ describe('auth and user routes', () => {
         expect(res.header['set-cookie'][0]).toEqual(expect.stringContaining('session=;'));
       });
   });
-//check that existing pis are not deleted
+
+  //check that existing pis are not deleted
   it('can patch a user', async() => {
     const user = await getUser();
     return request(app)
@@ -95,6 +96,27 @@ describe('auth and user routes', () => {
         });
       });
   });
+
+  it('via admin role only, can patch a user such that the role of the user is updated', async() => {
+    const userToChangeRole = await getUser({ role: 'user' });
+
+    return adminAgent
+      .patch(`/api/v1/auth/change-role/${userToChangeRole._id}`)
+      .send({ role: 'admin' })
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: userToChangeRole._id.toString(),
+          email: userToChangeRole.email,
+          role: 'admin',
+          myPis: [{ 
+            _id: expect.any(String), 
+            piNickname: 'userPi' 
+          }],
+          __v: 0
+        });
+      });
+  });
+
 
   it('should throw an error when a user tries to delete a user', async() => {
     const deleteMe = await getUser();
