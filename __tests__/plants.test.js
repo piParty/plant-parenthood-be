@@ -22,6 +22,23 @@ describe('plant route tests', () => {
       });
   });
 
+  it('gets all plants', async() => {
+    const plants = await getPlants();
+    console.log(plants);
+    return request(app)
+      .get('/api/v1/plants')
+      .then(res => {
+        plants.forEach(plant => {
+          expect(res.body).toContainEqual({
+            _id: expect.any(String),
+            commonName: plant.commonName,
+            sunlightPreference: plant.sunlightPreference,
+            __v: 0
+          });
+        });
+      });
+  });
+
 
 
 });
