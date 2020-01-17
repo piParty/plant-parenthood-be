@@ -80,7 +80,7 @@ describe('auth and user routes', () => {
       });
   });
 
-  //check that existing pis are not deleted
+  //vanilla patch route (will be deleted)
   it('can patch a user', async() => {
     const user = await getUser();
     return request(app)
@@ -116,7 +116,6 @@ describe('auth and user routes', () => {
         });
       });
   });
-
 
   it('should throw an error when a user tries to delete a user', async() => {
     const deleteMe = await getUser();

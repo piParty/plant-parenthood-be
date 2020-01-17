@@ -14,7 +14,7 @@ describe('piDataPoint route tests', () => {
     //to make sure that the agent gets assigned a data session token!
       .post('/api/v1/pi-data-sessions')
       .send({
-        piNicknameId: user.myPis[0]._id , 
+        piNicknameId: user.myPis[0]._id, 
         sensorType: ['light'], 
         piLocationInHouse: 'kithcen', 
         city: 'Portland, OR'
@@ -23,7 +23,6 @@ describe('piDataPoint route tests', () => {
         dataSessionId = res.body._id;
         //tokens persist, so this userAgent has the dataSession
         return userAgent
-        //now that we have a token (dataSession), we can post a data point
           .post('/api/v1/pi-data-points') 
         //shape of data has to look like what the pi is sending
           .send({
