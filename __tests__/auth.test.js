@@ -79,7 +79,7 @@ describe('auth and user routes', () => {
         expect(res.header['set-cookie'][0]).toEqual(expect.stringContaining('session=;'));
       });
   });
-//check that existing pis are not deleted
+  //check that existing pis are not deleted
   it('can patch a user', async() => {
     const user = await getUser();
     return request(app)
