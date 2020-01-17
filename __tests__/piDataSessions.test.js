@@ -46,6 +46,7 @@ describe('piDataSession route tests', () => {
     it('should be able to get a dataSession by ID', async() => {
       const user = await getUser({ email: 'user0@tess.com' });
       const session = await getPiDataSession({ piNicknameId: user.myPis[0]._id });
+      console.log(session);
       return userAgent
         .get(`/api/v1/pi-data-sessions/${session._id}`)
         .then(res => {
@@ -176,7 +177,7 @@ describe('piDataSession route tests', () => {
       const session = await getPiDataSession();
       return request(app)
         .patch(`/api/v1/pi-data-sessions/${session.id}`)
-        .send({ sensorType: ['Gamma Ray'] })
+        .send({ sensorType: ['light'] })
         .then(res => {
           expect(res.body).toEqual({
             message: 'Login required.',
