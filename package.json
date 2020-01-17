@@ -25,6 +25,8 @@
     "supertest": "^4.0.2"
   },
   "dependencies": {
+    "asciichart": "1.5.9",
+    "asciiplot": "1.0.0",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.4",
     "dotenv": "^8.2.0",
