@@ -62,13 +62,13 @@ You will need at least one of the following to use the software:
   - MC3008 analog to digital converter
   - single cell photocell resistor
   - leads
-  ![light sensor setup for raspberry pi](./assets/light_pi.jpg)
+  ![light sensor setup for raspberry pi](./lib/assets/light_pi.jpg)
    
 - Temperature/Humidity: This setup requires the following:
   - DHT22 3 prong temperature/humidity sensor
   - leads
   - connect positive lead to 5V instead of 3.3V
-  ![temperature/humidity sensor setup for raspberry pi](./assets/temp_humid_pi.jpg)
+  ![temperature/humidity sensor setup for raspberry pi](./lib/assets/temp_humid_pi.jpg)
 
 
 ### Using your Raspberry Pi from your computer
