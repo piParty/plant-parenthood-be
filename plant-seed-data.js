@@ -4,14 +4,34 @@ const Plant = require('./lib/models/Plant');
 require('./lib/utils/connect')();
 const mongoose = require('mongoose');
 
-const plantObjectsArray = plants.low_light_plants.map(plantName => {
+const lowLightPlantObjectsArray = plants.low_light_plants.map(plantName => {
   return ({
     commonName: plantName,
     sunlightPreference: 'low'
   });
 });
 
-const seedPlants = async() => await Plant.create(plantObjectsArray)
-  .then(() => mongoose.connection.close());
+const mediumLightPlantObjectsArray = plants.medium_light_plants.map(plantName => {
+  return ({
+    commonName: plantName,
+    sunlightPreference: 'medium'
+  });
+});
 
-seedPlants();
+const highLightPlantObjectsArray = plants.high_light_plants.map(plantName => {
+  return ({
+    commonName: plantName,
+    sunlightPreference: 'high'
+  });
+});
+
+const seedLowLightPlants = async() => await Plant.create(lowLightPlantObjectsArray);
+
+const seedMediumLightPlants = async() => await Plant.create(mediumLightPlantObjectsArray);
+
+const seedHighLightPlants = async() => await Plant.create(highLightPlantObjectsArray);
+
+seedLowLightPlants()
+  .then(() => seedMediumLightPlants())
+  .then(() => seedHighLightPlants())
+  .then(() => mongoose.connection.close());
