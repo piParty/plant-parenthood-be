@@ -17,11 +17,9 @@ describe('piDataPoint route tests', () => {
         city: 'Portland, OR'
       })
       .then(res=> {
-        console.log(res.body);
         dataSessionId = res.body._id;
         //tokens persist, so this userAgent has the dataSession
         return userAgent
-        //now that we have a token (dataSession), we can post a data point
           .post('/api/v1/pi-data-points') 
         //shape of data has to look like what the pi is sending
           .send({

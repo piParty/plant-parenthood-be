@@ -20,7 +20,10 @@ describe('auth and user routes', () => {
           _id: expect.any(String),
           email: 'new@tess.com',
           role: 'user',
-          myPis: [{ piNickname: 'myFirstPi', _id: expect.any(String) }],
+          myPis: [{ 
+            piNickname: 'myFirstPi', 
+            _id: expect.any(String) 
+          }],
           __v: 0 
         });
       });
@@ -37,7 +40,10 @@ describe('auth and user routes', () => {
           _id: user._id,
           email: user.email,
           role: 'user',
-          myPis: [{ piNickname: 'userPi', _id: expect.any(String) }],
+          myPis: [{ 
+            piNickname: 'userPi', 
+            _id: expect.any(String) 
+          }],
           __v: 0
         });
       });
@@ -79,7 +85,7 @@ describe('auth and user routes', () => {
       });
   });
 
-  it('can update a users Pis', async() => {
+  it('can patch the myPis field such that users can add an additional pi', async() => {
     const userInfoOfAgent = await getUser({ email:'user0@tess.com' });
     const initialPis = userInfoOfAgent.myPis;
     return userAgent
@@ -88,7 +94,10 @@ describe('auth and user routes', () => {
       .then(res => {
         expect(res.body).toEqual({
           ...userInfoOfAgent,
-          myPis: [...initialPis, { _id: expect.any(String), piNickname: 'mySecondPi' }]
+          myPis: [...initialPis, { 
+            _id: expect.any(String), 
+            piNickname: 'mySecondPi' 
+          }]
         });
       });
   });
@@ -113,7 +122,6 @@ describe('auth and user routes', () => {
       });
   });
 
-
   it('should throw an error when a user tries to delete a user', async() => {
     const deleteMe = await getUser();
 
@@ -134,7 +142,10 @@ describe('auth and user routes', () => {
           _id: deleteMe._id,
           email: deleteMe.email,
           role: 'user',
-          myPis: [{ piNickname: 'userPi', _id: expect.any(String) }],
+          myPis: [{ 
+            piNickname: 'userPi', 
+            _id: expect.any(String) 
+          }],
           __v: 0
         });
       });
