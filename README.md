@@ -4,16 +4,19 @@ Tess Lameyer, Lisa Carpenter, Ian Andrewson, Alan Hermanns, Ben Beekman
 
 ## GOAL:
 
+To create a hardware and software solution for remotely monitoring, logging, and uploading data about sunlight and other environmental factors that affect your houseplants, using inexpensive sensors with a Raspberry Pi.
+
 ## TECH STACK:
 
 Frameworks
--Node.js
--Python
+
+- Node.js
+- Python (running on Raspberry Pi)
 
 Database
 
 - Mongoose/MongoDB on Heroku server
-- Raspberry Pis use HTTP requests (request library) to post to the express HTTP server on Heroku.
+- Raspberry Pis using HTTP requests (request library) to post to the express HTTP server on Heroku.
 
 ## HARDWARE:
 
@@ -21,19 +24,16 @@ Database
 
 Our development and testing used Raspberry Pi 4 B, but this project should work for Raspberry Pi 3 B+.
 
-### Optional sensors
+### Raspberry Pi sensors
 
-#### Temperature and Humidity sensor
+You will need at least one of the following to use the software:
 
-#### HDR Light Sensor
-
-HDR light sensor can be purchased at https://www.amazon.com/gp/product/B00XW2OFWW
+- LDR Photo Resistor- purchase at https://www.amazon.com/gp/product/B016D737Y4, as well as a 10kΩ resistor (https://www.amazon.com/Projects-100EP51210K0-10k-Resistors-Pack/dp/B0185FIOTA)
+- DHT22 Temperature and Humidity sensor- purchase at https://www.amazon.com/gp/product/B00XW2OFWW
 
 ## Python: virtual environment, venv --> PIP needs its virutal environment to run; PyTest is a test environment for python
 
-We tested two different light sensors. The Adafruit TSL-2591 requires a bit more setup, but gives more accurate light readings.
-
-###Configuring the device:
+###Configuring the Raspberry Pi:
 
 - Connect a MicroSD card to your computer, and format it in FAT32 format (you can also buy a pre-loaded MicroSD cart with NOOBS pre-installed, and skip the next few steps).
 - Download the NOOBS operating system from [The Raspberry Pi NOOBS download page](https://www.raspberrypi.org/downloads/noobs/)
@@ -57,7 +57,19 @@ We tested two different light sensors. The Adafruit TSL-2591 requires a bit more
 
 ### Setting Up the Sensors
 
-- 
+- Light: This setup requires the following:
+  - 10KOhm resistor
+  - MC3008 analog to digital converter
+  - single cell photocell resistor
+  - leads
+  ![light sensor setup for raspberry pi](./lib/assets/light_pi.jpg)
+   
+- Temperature/Humidity: This setup requires the following:
+  - DHT22 3 prong temperature/humidity sensor
+  - leads
+  - connect positive lead to 5V instead of 3.3V
+  ![temperature/humidity sensor setup for raspberry pi](./lib/assets/temp_humid_pi.jpg)
+
 
 ### Using your Raspberry Pi from your computer
 

@@ -1,5 +1,4 @@
 require('dotenv').config();
-
 const { getUser, userAgent, adminAgent } = require('../lib/helpers/data-helpers');
 const request = require('supertest');
 const app = require('../lib/app');
@@ -21,7 +20,10 @@ describe('auth and user routes', () => {
           _id: expect.any(String),
           email: 'new@tess.com',
           role: 'user',
-          myPis: [{ piNickname: 'myFirstPi', _id: expect.any(String) }],
+          myPis: [{ 
+            piNickname: 'myFirstPi', 
+            _id: expect.any(String) 
+          }],
           __v: 0 
         });
       });
@@ -38,7 +40,10 @@ describe('auth and user routes', () => {
           _id: user._id,
           email: user.email,
           role: 'user',
-          myPis: [{ piNickname: 'userPi', _id: expect.any(String) }],
+          myPis: [{ 
+            piNickname: 'userPi', 
+            _id: expect.any(String) 
+          }],
           __v: 0
         });
       });
@@ -80,19 +85,19 @@ describe('auth and user routes', () => {
       });
   });
 
-  //check that existing pis are not deleted
-  it('can patch a user', async() => {
-    const user = await getUser();
-    return request(app)
-      .patch(`/api/v1/auth/${user._id}`)
-      .send({ password: 'notPasswordAnymore', myPis: { piNickname: 'MyFirstPi' } })
+  it('can patch the myPis field such that users can add an additional pi', async() => {
+    const userInfoOfAgent = await getUser({ email:'user0@tess.com' });
+    const initialPis = userInfoOfAgent.myPis;
+    return userAgent
+      .patch(`/api/v1/auth/myPis/${userInfoOfAgent._id}`)
+      .send({ piNickname: 'mySecondPi' })
       .then(res => {
         expect(res.body).toEqual({
-          _id: user._id.toString(),
-          email: user.email,
-          role: 'user',
-          myPis: [{ _id: expect.any(String), piNickname: 'MyFirstPi' }],
-          __v: 0
+          ...userInfoOfAgent,
+          myPis: [...initialPis, { 
+            _id: expect.any(String), 
+            piNickname: 'mySecondPi' 
+          }]
         });
       });
   });
@@ -117,7 +122,6 @@ describe('auth and user routes', () => {
       });
   });
 
-
   it('should throw an error when a user tries to delete a user', async() => {
     const deleteMe = await getUser();
 
@@ -138,7 +142,10 @@ describe('auth and user routes', () => {
           _id: deleteMe._id,
           email: deleteMe.email,
           role: 'user',
-          myPis: [{ piNickname: 'userPi', _id: expect.any(String) }],
+          myPis: [{ 
+            piNickname: 'userPi', 
+            _id: expect.any(String) 
+          }],
           __v: 0
         });
       });
