@@ -40,7 +40,6 @@ describe('plant route tests', () => {
 
   it('gets a plant by id', async() => {
     const plant = await getPlant();
-    console.log(plant);
     return request(app)
       .get(`/api/v1/plants/${plant._id}`)
       .then(res => {
@@ -48,6 +47,21 @@ describe('plant route tests', () => {
           _id: expect.any(String),
           commonName: plant.commonName,
           sunlightPreference: plant.sunlightPreference,
+          __v: 0
+        });
+      });
+  });
+
+  it('patches a plant by id', async() => {
+    const plant = await getPlant();
+    return adminAgent
+      .patch(`/api/v1/plants/${plant._id}`)
+      .send({ sunlightPreference: 'high' })
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          commonName: plant.commonName,
+          sunlightPreference: 'high',
           __v: 0
         });
       });
