@@ -35,3 +35,6 @@ seedLowLightPlants()
   .then(() => seedMediumLightPlants())
   .then(() => seedHighLightPlants())
   .then(() => mongoose.connection.close());
+
+// Promise.all([seedLowLightPlants(), seedMediumLightPlants(), seedHighLightPlants()])
+//   .then(mongoose.connection.close());

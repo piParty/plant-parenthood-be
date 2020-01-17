@@ -55,6 +55,10 @@ We tested two different light sensors. The Adafruit TSL-2591 requires a bit more
 - If you're using an Adafruit TSL-2591, enable I2C.
 - Restart the device (if you aren't prompted to do so, use `sudo reboot`).
 
+### Setting Up the Sensors
+
+- 
+
 ### Using your Raspberry Pi from your computer
 
 - In the Terminal on the Raspberry Pi, type `vncserver` and hit return.
