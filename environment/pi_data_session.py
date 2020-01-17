@@ -26,7 +26,7 @@ print(token)
 sensors = args.s.split(',')
 
 reading_interval = 1
-num_readings = 30
+num_readings = 10
 
 if "light" in sensors:
     spi = spidev.SpiDev()
