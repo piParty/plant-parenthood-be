@@ -97,9 +97,9 @@ describe('auth and user routes', () => {
       });
   });
 
-  it('via admin role only, can patch a user such that the role of the user is updated', async() => {
+  it.only('via admin role only, can patch a user such that the role of the user is updated', async() => {
     const userToChangeRole = await getUser({ role: 'user' });
-    
+
     return adminAgent
       .patch(`/api/v1/auth/change-role/${userToChangeRole._id}`)
       .send({ role: 'admin' })
@@ -110,7 +110,7 @@ describe('auth and user routes', () => {
           role: 'admin',
           myPis: [{ 
             _id: expect.any(String), 
-            piNickname: 'MyFirstPi' 
+            piNickname: 'userPi' 
           }],
           __v: 0
         });
