@@ -18,8 +18,10 @@ def get_plants(light_level):
     return plants
 
 low_light_plants = get_plants(level[0])
-#medium_light_plants = get_plants(level[1])
-#high_light_plants = get_plants(level[2])
+medium_light_plants = get_plants(level[1])
+high_light_plants = get_plants(level[2])
 
 file = open("./plants.json", "w")
-file.write(json.dumps({"low_light_plants": low_light_plants }) )
+file.write(json.dumps({ "low_light_plants": low_light_plants,\
+                "medium_light_plants": medium_light_plants,\
+                "high_light_plants": high_light_plants }))

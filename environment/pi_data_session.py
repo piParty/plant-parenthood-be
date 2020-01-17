@@ -39,7 +39,7 @@ def get_light_reading():
     return data
     
 def get_temp_hum_readings():
-    sensor = Adafruit_DHT.DHT11
+    sensor = Adafruit_DHT.DHT22
     gpio = 17
     
     return Adafruit_DHT.read_retry(sensor, gpio)
