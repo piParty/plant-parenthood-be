@@ -25,16 +25,11 @@ const highLightPlantObjectsArray = plants.high_light_plants.map(plantName => {
   });
 });
 
-const seedLowLightPlants = async() => await Plant.create(lowLightPlantObjectsArray);
+const seedLowLightPlants = () => Plant.create(lowLightPlantObjectsArray);
 
-const seedMediumLightPlants = async() => await Plant.create(mediumLightPlantObjectsArray);
+const seedMediumLightPlants = () => Plant.create(mediumLightPlantObjectsArray);
 
-const seedHighLightPlants = async() => await Plant.create(highLightPlantObjectsArray);
+const seedHighLightPlants = () => Plant.create(highLightPlantObjectsArray);
 
-seedLowLightPlants()
-  .then(() => seedMediumLightPlants())
-  .then(() => seedHighLightPlants())
-  .then(() => mongoose.connection.close());
-
-// Promise.all([seedLowLightPlants(), seedMediumLightPlants(), seedHighLightPlants()])
-//   .then(mongoose.connection.close());
+Promise.all([seedLowLightPlants(), seedMediumLightPlants(), seedHighLightPlants()])
+  .finally(() => mongoose.connection.close());
