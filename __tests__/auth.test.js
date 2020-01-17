@@ -99,7 +99,8 @@ describe('auth and user routes', () => {
 
   it('via admin role only, can patch a user such that the role of the user is updated', async() => {
     const userToChangeRole = await getUser({ role: 'user' });
-    return request(app)
+    
+    return adminAgent
       .patch(`/api/v1/auth/change-role/${userToChangeRole._id}`)
       .send({ role: 'admin' })
       .then(res => {
