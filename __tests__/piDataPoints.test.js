@@ -1,9 +1,6 @@
 require('dotenv').config();
 
 const { getPiDataPoints, getPiDataSession, userAgent, getUser } = require('../lib/helpers/data-helpers');
-const request = require('supertest');
-const app = require('../lib/app');
-
 
 describe('piDataPoint route tests', () => {
   it('(the pi) should be able to verify a session and post a data point using this route', async() => {
@@ -14,7 +11,7 @@ describe('piDataPoint route tests', () => {
     //to make sure that the agent gets assigned a data session token!
       .post('/api/v1/pi-data-sessions')
       .send({
-        piNicknameId: user.myPis[0]._id , 
+        piNicknameId: user.myPis[0]._id, 
         sensorType: ['light'], 
         piLocationInHouse: 'kithcen', 
         city: 'Portland, OR'
@@ -40,7 +37,7 @@ describe('piDataPoint route tests', () => {
           .then(res => {
             expect(res.body).toEqual({
               _id: expect.any(String),
-              piDataSessionId: dataSessionId,
+              piDataSessionId: dataSessionId.toString(),
               data: {
                 light:{
                   averageValue: 10, 

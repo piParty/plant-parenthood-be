@@ -80,23 +80,6 @@ describe('auth and user routes', () => {
       });
   });
 
-  //check that existing pis are not deleted
-  it('can patch a user', async() => {
-    const user = await getUser();
-    return request(app)
-      .patch(`/api/v1/auth/${user._id}`)
-      .send({ password: 'notPasswordAnymore', myPis: { piNickname: 'MyFirstPi' } })
-      .then(res => {
-        expect(res.body).toEqual({
-          _id: user._id.toString(),
-          email: user.email,
-          role: 'user',
-          myPis: [{ _id: expect.any(String), piNickname: 'MyFirstPi' }],
-          __v: 0
-        });
-      });
-  });
-
   it('can update a users Pis', async() => {
     const userInfoOfAgent = await getUser({ email:'user0@tess.com' });
     const initialPis = userInfoOfAgent.myPis;
@@ -108,24 +91,6 @@ describe('auth and user routes', () => {
           ...userInfoOfAgent,
           myPis: [...initialPis, { _id: expect.any(String), piNickname: 'mySecondPi' }]
         });
-      });
-  });
-
-  it.only('can change a user password and force a logout', async() => {
-    const userInfoOfAgent = await getUser({ email:'user0@tess.com' });
-    return userAgent
-      .patch(`/api/v1/auth/change-login-info/${userInfoOfAgent._id}`)
-      .send({ password: 'ANewPassword' })
-      .then(async() => {
-        return await userAgent
-          .post('/api/v1/auth/login')
-          .send({ email: userInfoOfAgent.email, password: 'ANewPassword' })
-          //.send({ email: 'ANewPassword', password: 'password' })
-          .then(res => {
-            console.log(res.body);
-            //expect(res.body).toEqual('something');
-            expect(res.header['set-cookie'][0]).toEqual(expect.stringContaining('session='));
-          });
       });
   });
 
