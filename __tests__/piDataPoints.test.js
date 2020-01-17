@@ -17,7 +17,6 @@ describe('piDataPoint route tests', () => {
         city: 'Portland, OR'
       })
       .then(res=> {
-        console.log(res.body);
         dataSessionId = res.body._id;
         //tokens persist, so this userAgent has the dataSession
         return userAgent
