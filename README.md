@@ -55,6 +55,22 @@ We tested two different light sensors. The Adafruit TSL-2591 requires a bit more
 - If you're using an Adafruit TSL-2591, enable I2C.
 - Restart the device (if you aren't prompted to do so, use `sudo reboot`).
 
+### Setting Up the Sensors
+
+- Light: This setup requires the following:
+  - 10KOhm resistor
+  - MC3008 analog to digital converter
+  - single cell photocell resistor
+  - leads
+  ![light sensor setup for raspberry pi](./assets/light_pi.jpg)
+   
+- Temperature/Humidity: This setup requires the following:
+  - DHT22 3 prong temperature/humidity sensor
+  - leads
+  - connect positive lead to 5V instead of 3.3V
+  ![temperature/humidity sensor setup for raspberry pi](./assets/temp_humid_pi.jpg)
+
+
 ### Using your Raspberry Pi from your computer
 
 - In the Terminal on the Raspberry Pi, type `vncserver` and hit return.
