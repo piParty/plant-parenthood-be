@@ -97,7 +97,7 @@ describe('auth and user routes', () => {
       });
   });
 
-  it.only('via admin role only, can patch a user such that the role of the user is updated', async() => {
+  it('via admin role only, can patch a user such that the role of the user is updated', async() => {
     const userToChangeRole = await getUser({ role: 'user' });
 
     return adminAgent
