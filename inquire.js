@@ -41,7 +41,7 @@ inquirer
           }
         ])
         .then(async answers => {
-          const user = await superagent('<login route>', {
+          const user = await superagent('https://plantonomous.herokuapp.com//api/v1/auth/login', {
             'TYPE': 'Application/JSON',
             'METHOD': 'POST'
           }, { 
@@ -62,8 +62,16 @@ inquirer
             ])
             .then(async answers => {
               if(answers.loginOptions === 'Get a Pi\'s session data'){
-                const sessionData = await superagent('<get session by id route>');
-                console.log('Your data for this Session', sessionData);
+                inquirer
+                  .prompt([
+                    {
+                      name: 'piToPatchNickName',
+                      message: 'Enter the nickName of the Pi from which you would like to see all the collected data'
+                    }])
+                  .then(async(answers) => {
+                    const sessionData = await superagent(`https://plantonomous.herokuapp.com/api/v1/pi-data-sessions/nickname/${answers.piToPatchNickName}`);
+                    console.log('Your data for this Session', sessionData);
+                  });
               }
               if(answers.loginOptions === 'Ammend a Session'){
                 inquirer
@@ -119,7 +127,7 @@ inquirer
                     }
                   ])
                   .then(async answers => {
-                    const dataSessionResponse = await superagent('<pidatasessions post route>', {
+                    const dataSessionResponse = await superagent('https://plantonomous.herokuapp.com/api/v1/pi-data-sessions', {
                       'TYPE': 'Application/JSON',
                       'METHOD': 'POST'
                     }, {
@@ -140,7 +148,7 @@ inquirer
                   });
               }
               if(answers.loginOptions === 'Log Out'){
-                superagent('<patch session route>', {
+                await superagent('https://plantonomous.herokuapp.com/auth/logout', {
                   'TYPE': 'Application/JSON',
                   'METHOD': 'POST'
                 })
@@ -165,7 +173,7 @@ inquirer
           }
         ])
         .then(async answers => {
-          const user = await superagent('<login route>', {
+          const user = await superagent('https://plantonomous.herokuapp.com/auth/signup', {
             'TYPE': 'Application/JSON',
             'METHOD': 'POST'
           }, { 
@@ -173,66 +181,69 @@ inquirer
             password: answers.password, 
             role: 'user' 
           });
-        });
-      inquirer
-        .prompt([
-          {
-            name : 'userName',
-            message :`You want to grow a plant.
-              What is your Pi's Username?`
-          },
-          {
-            name: 'IPAddress',
-            message : 'what is your pi\'s IP Address?'
-          },
-          {
-            name: 'nickName',
-            message: 'Give your Pi a nick name. This will be used for authentication purposes.'
-          },
-          {
-            type: 'checkbox',
-            name: 'sensors',
-            message: 'Select sensors you have attached to your Pi and want to use.',
-            choices:['light', 'temperature/humidity', 'light-hdr']
-          },
-          {
-            name : 'piLocationInHouse',
-            message: 'Where is the Pi in your house? This has nothing to do with the security of your Pi.'
-          },
-          {
-            name: 'city',
-            message: 'What city is your Pi in?'
-          }])
-        .then(async answers => {
+        })
+        .then(() => {
 
-          const dataSessionResponse = await superagent('<pidatasessions route>', {
-            'TYPE': 'Application/JSON',
-            'METHOD': 'POST'
-          }, {
-            piNickname: answers.nickName, 
-            sensorType: answers.sensors,
-            piLocationInHouse: answers.piLocationInHouse,
-            city: answers.city
-          });
-          const dataSession = dataSessionResponse.headers.cookies.dataSession;
-          
-          ssh.connect({
-            host: answers.IPAddress,
-            username : answers.userName,
-            password: answers.password
-          })
-            .then(function(){
-              ssh.execCommand('wget https://raw.githubusercontent.com/piParty/pi-party/dev/environment/pi_data_session.py', {
-                onStderr(err){
-                  console.log(err + 'Try again');
-                }
+          inquirer
+            .prompt([
+              {
+                name : 'userName',
+                message :`You want to grow a plant.
+            What is your Pi's Username?`
+              },
+              {
+                name: 'IPAddress',
+                message : 'what is your pi\'s IP Address?'
+              },
+              {
+                name: 'nickName',
+                message: 'Give your Pi a nick name. This will be used for authentication purposes.'
+              },
+              {
+                type: 'checkbox',
+                name: 'sensors',
+                message: 'Select sensors you have attached to your Pi and want to use.',
+                choices:['light', 'temperature/humidity', 'light-hdr']
+              },
+              {
+                name : 'piLocationInHouse',
+                message: 'Where is the Pi in your house? This has nothing to do with the security of your Pi.'
+              },
+              {
+                name: 'city',
+                message: 'What city is your Pi in?'
+              }])
+            .then(async answers => {
+
+              const dataSessionResponse = await superagent('https://plantonomous.herokuapp.com/pi-data-sessions', {
+                'TYPE': 'Application/JSON',
+                'METHOD': 'POST'
+              }, {
+                piNickname: answers.nickName, 
+                sensorType: answers.sensors,
+                piLocationInHouse: answers.piLocationInHouse,
+                city: answers.city
               });
-            })
-            .then(function(){
-              ssh.execCommand(`python3 (file name) -c ${dataSession} -s ${JSON.stringify(answers.sensors).slice(1, JSON.stringify(answers.sensors).length - 2)}`);
-            })
-            .then(function(){
-              console.info('ooooooOh!', 'So, I hope you know what you\'re getting yourself into, because we won\'t tell you, but... We\'d like to get this Pi party started');
+              const dataSession = dataSessionResponse.headers.cookies.dataSession;
+          
+              ssh.connect({
+                host: answers.IPAddress,
+                username : answers.userName,
+                password: answers.password
+              })
+                .then(function(){
+                  ssh.execCommand('wget https://raw.githubusercontent.com/piParty/pi-party/dev/environment/pi_data_session.py', {
+                    onStderr(err){
+                      console.log(err + 'Try again');
+                    }
+                  });
+                })
+                .then(function(){
+                  ssh.execCommand(`python3 (file name) -c ${dataSession} -s ${JSON.stringify(answers.sensors).slice(1, JSON.stringify(answers.sensors).length - 2)}`);
+                })
+                .then(function(){
+                  console.info('ooooooOh!', 'So, I hope you know what you\'re getting yourself into, because we won\'t tell you, but... We\'d like to get this Pi party started');
+                });
             });
         });
     }
