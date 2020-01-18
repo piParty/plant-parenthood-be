@@ -31,7 +31,5 @@ const seedMediumLightPlants = async() => await Plant.create(mediumLightPlantObje
 
 const seedHighLightPlants = async() => await Plant.create(highLightPlantObjectsArray);
 
-seedLowLightPlants()
-  .then(() => seedMediumLightPlants())
-  .then(() => seedHighLightPlants())
+Promise.all([seedLowLightPlants(), seedMediumLightPlants(), seedHighLightPlants()])
   .then(() => mongoose.connection.close());
