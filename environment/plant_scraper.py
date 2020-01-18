@@ -7,13 +7,15 @@ level = ['low', 'medium', 'high']
 
 def get_plants(light_level):
     plants = []
-    plants_page = 'https://greeneryunlimited.co/collections/all-plants/{}-light'.format(level[0])
+    plants_page = 'https://greeneryunlimited.co/collections/all-plants/{}-light'.format(light_level)
     page = urllib.request.urlopen(plants_page)
     html_soup = BeautifulSoup(page, 'html.parser')
     plant_name_box = html_soup.find_all('div',  attrs={"class": "info"})
     
     for i in plant_name_box:
-        plants.append(i.text.split('|')[0].strip())
+        plant_name = i.text.split('|')[0].strip()
+        if plant_name not in plants:
+            plants.append(plant_name)
 
     return plants
 

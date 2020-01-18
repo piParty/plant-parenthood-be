@@ -45,7 +45,6 @@ def get_temp_hum_readings():
     return Adafruit_DHT.read_retry(sensor, gpio)
 
 def post_data(data_bundle):
-    # will eventually change to heroku server url
     r = requests.post('https://plantonomous.herokuapp.com/api/v1/pi-data-points',\
                         headers = { 'Content-Type': 'application/json',\
                         'dataSession': token },\
@@ -54,7 +53,7 @@ def post_data(data_bundle):
     print(r.text)
     return r
 
-# read value and post data bundle to server
+# read sensor values and post data bundle to server
 while(True):
     if "light" in sensors:
         light_data = np.zeros(num_readings)
@@ -91,6 +90,9 @@ while(True):
     if "temperature/humidity" in sensors:
         data_bundle["data"]["humidity"] = humidity_stats
         data_bundle["data"]["temperature"] = temperature_stats
-    print("Reading frequency: 1.0 hZ.  Number of readings: 30.  Results: {} ".format(data_bundle))
+    print("Reading frequency: 1.0 hZ.  Number of readings: {num_readings}.\
+        Results: {data_bundle} "\
+        .format(num_readings = num_readings, data_bundle))
     response = post_data(data_bundle)
-    print("Posted to pi-party database: {}".format(response))
+    print("pi-party post to database satus: {}"\
+        .format(response))
