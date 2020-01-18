@@ -26,9 +26,7 @@ const highLightPlantObjectsArray = plants.high_light_plants.map(plantName => {
 });
 
 const seedLowLightPlants = async() => await Plant.create(lowLightPlantObjectsArray);
-
 const seedMediumLightPlants = async() => await Plant.create(mediumLightPlantObjectsArray);
-
 const seedHighLightPlants = async() => await Plant.create(highLightPlantObjectsArray);
 
 Promise.all([seedLowLightPlants(), seedMediumLightPlants(), seedHighLightPlants()])
