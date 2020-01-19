@@ -1,4 +1,4 @@
-# Plant Parenthood
+# :seedling: Plant Parenthood :seedling:
 ## A Secure IoT Plant Sensor Application
 
 Tess Lameyer, Lisa Carpenter, Ian Andrewson, Alan Hermanns, Ben Beekman
@@ -33,26 +33,24 @@ There are many kits avaiable on the market that make it possible to monitor envi
   - "python3": "0.0.1"
 
 ## RAPBERRY PI CONFIGURATION AND SENSOR SETUP
-See https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up for more detailed information about setting up a Raspberry Pi 4
+- See https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up for more detailed information about installing the Raspbian OS on a Raspberry Pi 4
 
-### GENERAL RASPBERRY PI SET UP
+  - Download the NOOBS operating system from [The Raspberry Pi NOOBS download page](https://www.raspberrypi.org/downloads/noobs/) to the root level of a formatted MicroSD card.  
+  - Eject the Micro SD card from your computer and insert it into the Raspberry Pi.
+  - Connect a display, keyboard, mouse, and power to your Raspberry Pi.
+  - Allow the device to boot into Raspbian, and complete the prompts, making sure to set a non-default password for your user.
+  - Confirm the dialog asking you to update the Raspberry Pi's software.
+  - Install updated software when prompted (allow adequate time for this).
+  - Open a terminal from the Accessories sub-menu of the Raspberry menu.
+  - Execute `sudo raspi-config` in the terminal, then navigate to `Network Options: Hostname`.
+  - Enter your desired Hostname.
+  - Navigate to `Interfacing Options`.
+  - Enable SSH - this will allow secure, remote access to your Raspberry Pi. 
+  - For photoresistor (light), enable SPI.
+  - For Adafruit TSL-2591, enable I2C.
+  - Restart the device (if you aren't prompted to do so, use `sudo reboot`).
 
-- Download the NOOBS operating system from [The Raspberry Pi NOOBS download page](https://www.raspberrypi.org/downloads/noobs/) into the root level of a formatted MicroSD card.  
-- Eject the Micro SD card from your computer and insert it into the Raspberry Pi.
-- Connect a display, keyboard, mouse, and power to your Raspberry Pi.
-- Allow the device to boot into Raspbian, and complete the prompts, making sure to set a non-default password for your user.
-- Confirm the dialog asking you to update the Raspberry Pi's software.
-- Install updated software when prompted (allow adequate time for this).
-- Open a terminal from the Accessories sub-menu of the Raspberry menu.
-- Execute `sudo raspi-config` in the terminal, then navigate to `Network Options: Hostname`.
-- Enter a new name that VNC Server will use to connect to the Pi.
-- Navigate to `Interfacing Options`.
-- Enable SSH - this will allow secure, remote access to your Raspberry Pi. 
-- For photoresistor (light), enable SPI.
-- For Adafruit TSL-2591, enable I2C.
-- Restart the device (if you aren't prompted to do so, use `sudo reboot`).
-
-### SENSOR HARDWARE AND SETUP
+## SENSOR HARDWARE AND SETUP
 
 - Light: This setup requires the following:
   - 10KOhm resistor
@@ -67,76 +65,53 @@ See https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up for mor
   - connect positive lead to 5V instead of 3.3V
   ![temperature/humidity sensor setup for raspberry pi](./lib/assets/temp_humid_pi.jpg)
 
-### APPLICATION ENDPOINTS
+## APPLICATION ENDPOINTS
 'path' | METHOD | Authorization
 
-* '/api/v1/auth'
-  * '/signup' | POST | Any | 
-    * SAMPLE REQUEST
-  ```
-  {
-   "email": "me!@me.com",
-   "password": "123",
-   "role": "user",
-   "myPis": [
-      {
-         "piNickname": "blueberrymuffin"
-      }
-   ]
-  }
-  ```
-    * SAMPLE RESPONSE
-  ```
-  {
-    "role": "admin",
-    "_id": "5e2369a25a034200173f7e9d",
-    "email": "me!@me.com",
-    "myPis": [
-        {
-            "_id": "5e2369a25a034200173f7e9e",
-            "piNickname": "blueberrymuffin"
-        }
-    ],
-    "__v": 0
-  }
-  ```
+### /api/v1/auth
+#### POST | /signup | Any 
+#### POST | /login | Any
+#### POST | /verify | Any
+#### PATCH | /myPis/:id | Admin Only
+#### PATCH | /change-role/:id | Admin Only
+#### POST | /logout | Any
+#### DELETE | /:id | Admin Only
 
-  * '/login' | POST | Any
-  * '/verify' | POST | Any
-  * '/myPis/:id' | PATCH | Admin Only
-  * '/change-role/:id' | PATCH | Admin Only
-  * '/logout | POST' | Any
-  * '/:id' | DELETE | Admin Only
+### /api/v1/pi-data-sessions
+#### POST | / | Any User
+#### GET | /location/:location | Any User
+#### GET | /city/:city | Any User
+#### GET | /nickname/:nickname | Any User
+#### GET | /:id | Any User
+#### GET | / | Admin Only
 
-* /api/v1/pi-data-sessions
-  * '/' | POST Any User
-  * '/location/:location' | GET | Any User
-  * '/city/:city' | GET | Any User
-  * '/nickname/:nickname' | GET | Any User
-  * '/:id' | GET | Any User
-  * '/' | GET | Admin Only
+### /api/v1/pi-data-points
+#### POST | / | Any
+#### GET | / | Any User
+#### GET | /stats/by-hour | Any User
+#### GET | /stats/raw | Any User
+#### GET | /:sessionId | Any User
 
-* /api/v1/pi-data-points
-  * '/'| POST | Any
-  * '/' | GET | Any User
-  * '/stats/by-hour' | GET | Any User
-  * '/stats/raw' | GET | Any User
-  * '/:sessionId' | GET 
-
-* /api/v1/plants
-  * '/' | POST | Admin Only
-  * '/' | GET | Any
-  * '/light/:type' | GET | Any
-  * '/:id' | GET | Any
-  * '/:id' | PATCH | Admin Only
-  * '/:id' | DELETE | Admin Only
+### /api/v1/plants
+#### POST | / | Admin Only
+#### GET | / | Any
+#### GET | /light/:type | Any
+#### GET | /:id | Any
+#### PATCH | /:id | Admin Only
+#### DELETE | /:id | Admin Only
 
 ## DATABASE MODELS
 
-* User
-* PiDataSession
-* PiDataPoint
-* Plant
+#### User
+#### PiDataSession
+#### PiDataPoint
+#### Plant
+
+## INITIALIZING A REMOTE DATA COLLECTION SESSION
+
+    SSH pi@<pi Hostname>
+    wget https://raw.githubusercontent.com/piParty/pi-party/dev/environment/pi_data_session.py
+    python3 ./pi_data_session.py -c <valid_token_from_cookie> -s <sensor1,sensor2>
 
 ## LICENSING
 
