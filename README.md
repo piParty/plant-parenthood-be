@@ -49,14 +49,16 @@ There are many kits avaiable on the market that make it possible to monitor envi
   - Restart the device using `sudo reboot`.
 
 ## SENSOR HARDWARE AND SETUP
-- Light: This setup requires the following:
+### Light
+Required Hardware
   - 10KOhm resistor
   - MCP3008 analog to digital converter
   - single cell photocell resistor
   - variety of leads
   ![light sensor setup for raspberry pi](./lib/assets/light_pi.jpg)
    
-- Temperature/Humidity: This setup requires the following:
+### Temperature/Humidity
+Required Hardware
   - DHT22 3 prong temperature/humidity sensor
   - variety of leads
   - connect positive lead to 5V instead of 3.3V
