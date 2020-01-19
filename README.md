@@ -69,36 +69,121 @@ There are many kits avaiable on the market that make it possible to monitor envi
 path | METHOD | Authorization
 
 ### /api/v1/auth
-#### POST | /signup | Any 
-#### POST | /login | Any
-#### POST | /verify | Any
-#### PATCH | /myPis/:id | Admin Only
-#### PATCH | /change-role/:id | Admin Only
-#### POST | /logout | Any
-#### DELETE | /:id | Admin Only
+#### POST | /signup | any 
+#### POST | /login | any
+#### POST | /verify | any
+#### PATCH | /myPis/:id | admin only
+#### PATCH | /change-role/:id | admin only
+#### POST | /logout | any
+#### DELETE | /:id | admin only
 
 ### /api/v1/pi-data-sessions
-#### POST | / | Any User
-#### GET | /location/:location | Any User
-#### GET | /city/:city | Any User
-#### GET | /nickname/:nickname | Any User
-#### GET | /:id | Any User
-#### GET | / | Admin Only
+#### POST | / | any user
+SAMPLE REQUEST
+```{
+   "piNicknameId": "abcdef123456abcdef123456",
+   "sensorType": "light",
+   "piLocationInHouse": "kitchen window",
+   "city": "Portland"
+}
+```
+SAMPLE RESPONSE
+```{
+    "sensorType": [
+        "light"
+    ],
+    "_id": "5e2490711985840017d24245",
+    "piNicknameId": "abcdef123456abcdef123456",
+    "piLocationInHouse": "kitchen window",
+    "city": "Portland",
+    "__v": 0,
+    "dataSession": "<data_session_token"
+}
+```
+#### GET | /location/:location | any user
+#### GET | /city/:city | any user
+#### GET | /nickname/:nickname | any user
+#### GET | /:id | any user
+SAMPLE RESPONSE
+```{
+    "sensorType": [
+        "light"
+    ],
+    "_id": "5e2490711985840017d24245",
+    "piNicknameId": "abcdef123456abcdef123456",
+    "piLocationInHouse": "kitchen window",
+    "city": "Portland",
+    "__v": 0
+}
+```
+#### GET | / | admin only
 
 ### /api/v1/pi-data-points
-#### POST | / | Any
-#### GET | / | Any User
-#### GET | /stats/by-hour | Any User
-#### GET | /stats/raw | Any User
-#### GET | /:sessionId | Any User
+#### POST | / | any user with valid token
+#### GET | / | any User
+#### GET | /stats/by-hour | any user
+#### GET | /stats/raw | any user
+#### GET | /:sessionId | any user
 
 ### /api/v1/plants
-#### POST | / | Admin Only
-#### GET | / | Any
-#### GET | /light/:type | Any
-#### GET | /:id | Any
-#### PATCH | /:id | Admin Only
-#### DELETE | /:id | Admin Only
+#### POST | / | admin only
+#### GET | / | any
+SAMPLE RESPONSE
+```{
+        "_id": "5e2367bf147e098f466c8998",
+        "commonName": "Aglaonema Marie",
+        "sunlightPreference": "low",
+        "__v": 0
+    },
+    {
+        "_id": "5e2367bf147e098f466c899a",
+        "commonName": "Aglaonema Silver Bay",
+        "sunlightPreference": "low",
+        "__v": 0
+    },
+    {
+        "_id": "5e2367bf147e098f466c899d",
+        "commonName": "Sansevieria Fernwood",
+        "scientificName": "Sansevieria fernieria",
+        "sunlightPreference": "low",
+        "__v": 0
+    }
+    ```
+
+#### GET | /light/:type | any
+SAMPLE RESPONSE FOR /light/high
+```[{
+        "_id": "5e236520c898e88eb207700d",
+        "commonName": "Fiddle Leaf Fig Tree",
+        "sunlightPreference": "high",
+        "__v": 0
+    },
+    {
+        "_id": "5e236520c898e88eb2077014",
+        "commonName": "Haworthia",
+        "sunlightPreference": "high",
+        "__v": 0
+    },
+    {
+        "_id": "5e236520c898e88eb2077012",
+        "commonName": "Pilea Peperomioides",
+        "sunlightPreference": "high",
+        "__v": 0
+    }]
+```
+
+#### GET | /:id | any
+SAMPLE RESPONSE
+```{
+    "_id": "5e236520c898e88eb207700d",
+    "commonName": "Fiddle Leaf Fig Tree",
+    "sunlightPreference": "high",
+    "__v": 0
+}
+```
+
+#### PATCH | /:id | admin only
+#### DELETE | /:id | admin only
 
 ## DATABASE MODELS
 
