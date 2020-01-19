@@ -72,6 +72,31 @@ See https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up for mor
 
 * '/api/v1/auth'
   * '/signup' | POST | Any
+  SAMPLE REQUEST
+  {
+   "email": "me!@me.com",
+   "password": "123",
+   "role": "user",
+   "myPis": [
+      {
+         "piNickname": "blueberrymuffin"
+      }
+   ]
+  }
+  SAMPLE RESPONSE
+  {
+    "role": "admin",
+    "_id": "5e2369a25a034200173f7e9d",
+    "email": "me!@me.com",
+    "myPis": [
+        {
+            "_id": "5e2369a25a034200173f7e9e",
+            "piNickname": "blueberrymuffin"
+        }
+    ],
+    "__v": 0
+  }
+
   * '/login' | POST | Any
   * '/verify' | POST | Any
   * '/myPis/:id' | PATCH | Admin Only
