@@ -134,23 +134,23 @@ SAMPLE RESPONSE
 SAMPLE RESPONSE
 ```
 [{
-        "_id": "5e2367bf147e098f466c8998",
-        "commonName": "Aglaonema Marie",
-        "sunlightPreference": "low",
-        "__v": 0
-    },
-    {
-        "_id": "5e2367bf147e098f466c899a",
-        "commonName": "Aglaonema Silver Bay",
-        "sunlightPreference": "low",
-        "__v": 0
-    },
-    {
-        "_id": "5e2367bf147e098f466c899d",
-        "commonName": "Sansevieria Fernwood",
-        "scientificName": "Sansevieria fernieria",
-        "sunlightPreference": "low",
-        "__v": 0
+    "_id": "5e2367bf147e098f466c8998",
+    "commonName": "Aglaonema Marie",
+    "sunlightPreference": "low",
+    "__v": 0
+  },
+  {
+    "_id": "5e2367bf147e098f466c899a",
+    "commonName": "Aglaonema Silver Bay",
+    "sunlightPreference": "low",
+    "__v": 0
+  },
+  {
+    "_id": "5e2367bf147e098f466c899d",
+    "commonName": "Sansevieria Fernwood",
+    "scientificName": "Sansevieria fernieria",
+    "sunlightPreference": "low",
+    "__v": 0
 }]
 ```
 
@@ -158,33 +158,33 @@ SAMPLE RESPONSE
 SAMPLE RESPONSE FOR /light/high
 ```
 [{
-        "_id": "5e236520c898e88eb207700d",
-        "commonName": "Fiddle Leaf Fig Tree",
-        "sunlightPreference": "high",
-        "__v": 0
-    },
-    {
-        "_id": "5e236520c898e88eb2077014",
-        "commonName": "Haworthia",
-        "sunlightPreference": "high",
-        "__v": 0
-    },
-    {
-        "_id": "5e236520c898e88eb2077012",
-        "commonName": "Pilea Peperomioides",
-        "sunlightPreference": "high",
-        "__v": 0
-    }]
+    "_id": "5e236520c898e88eb207700d",
+    "commonName": "Fiddle Leaf Fig Tree",
+    "sunlightPreference": "high",
+    "__v": 0
+  },
+  {
+    "_id": "5e236520c898e88eb2077014",
+    "commonName": "Haworthia",
+    "sunlightPreference": "high",
+    "__v": 0
+  },
+  {
+    "_id": "5e236520c898e88eb2077012",
+    "commonName": "Pilea Peperomioides",
+    "sunlightPreference": "high",
+    "__v": 0
+}]
 ```
 
 #### GET | /:id | any
 SAMPLE RESPONSE
 ```
 {
-    "_id": "5e236520c898e88eb207700d",
-    "commonName": "Fiddle Leaf Fig Tree",
-    "sunlightPreference": "high",
-    "__v": 0
+  "_id": "5e236520c898e88eb207700d",
+  "commonName": "Fiddle Leaf Fig Tree",
+  "sunlightPreference": "high",
+  "__v": 0
 }
 ```
 
@@ -195,7 +195,8 @@ SAMPLE RESPONSE
 
 #### User
 ```
-{ email: {
+{ 
+  email: {
     type: String, 
     required: true, 
     unique: [true, 'Email is taken']
@@ -228,7 +229,8 @@ SAMPLE RESPONSE
 
 #### PiDataSession
 ```
-{ piNicknameId: {
+{ 
+  piNicknameId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true
   },
@@ -251,10 +253,11 @@ SAMPLE RESPONSE
 
 #### PiDataPoint
 ```
-  { piDataSessionId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'PiDataSession',
-    required: true
+{ 
+  piDataSessionId: {
+  type: mongoose.Schema.Types.ObjectId,
+  ref: 'PiDataSession',
+  required: true
   },
   data: {
     type: Object,
@@ -263,14 +266,16 @@ SAMPLE RESPONSE
   piTimestamp: {
     type: Date,
     required: true
-  }}
+  }
+}
 ```
 #### Plant
 ```
-  { commonName: {
-    type: String, 
-    required: true,
-    unique: [true, 'Plant name is already in database']
+{ 
+  commonName: {
+  type: String, 
+  required: true,
+  unique: [true, 'Plant name is already in database']
   }, 
   scientificName: {
     family: String, 
@@ -278,12 +283,11 @@ SAMPLE RESPONSE
     species: String
   }, 
   waterPreference: String,
-
   sunlightPreference: {
     type: String,  
     enum: ['low', 'medium', 'high']
   }
-  }
+}
   ```
 
 ## INITIALIZING A REMOTE DATA COLLECTION SESSION
