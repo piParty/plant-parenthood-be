@@ -18,6 +18,15 @@ There are many kits avaiable on the market that make it possible to monitor envi
 - Raspberry Pi 4 B
   - Linux
   - Python 3.7.4
+    - argparse
+    - Adafruit_DHT
+    - numpy as np
+    - spidev
+    - datetime
+    - time
+    - os
+    - json
+    - requests
 - Server
   - Node.js
   - MongoDB
