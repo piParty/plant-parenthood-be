@@ -71,8 +71,7 @@ See https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up for mor
 'path' | METHOD | Authorization
 
 * '/api/v1/auth'
-  * '/signup' | POST | Any 
-    * SAMPLE REQUEST
+  * '/signup' | POST | Any | SAMPLE REQUEST
   ```{
    "email": "me!@me.com",
    "password": "123",
@@ -82,7 +81,7 @@ See https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up for mor
          "piNickname": "blueberrymuffin"
       }
    ]
-  }```
+  }
 * SAMPLE RESPONSE
 ```{
     "role": "admin",
