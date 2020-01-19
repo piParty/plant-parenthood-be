@@ -38,6 +38,40 @@ describe('plant route tests', () => {
       });
   });
 
+  it('gets plants by low sunlight preference', async() => {
+    const plants = await getPlants();
+    const lowPlants = plants.filter(plant => plant.sunlightPreference === 'low');
+    return request(app)
+      .get('/api/v1/plants/light/low')
+      .then(res => {
+        lowPlants.forEach(plant => {
+          expect(res.body).toContainEqual({
+            _id: expect.any(String),
+            commonName: plant.commonName,
+            sunlightPreference: plant.sunlightPreference,
+            __v: 0
+          });
+        });
+      });
+  });
+
+  it('gets plants by high sunlight preference', async() => {
+    const plants = await getPlants();
+    const highPlants = plants.filter(plant => plant.sunlightPreference === 'high');
+    return request(app)
+      .get('/api/v1/plants/light/low')
+      .then(res => {
+        highPlants.forEach(plant => {
+          expect(res.body).toContainEqual({
+            _id: expect.any(String),
+            commonName: plant.commonName,
+            sunlightPreference: plant.sunlightPreference,
+            __v: 0
+          });
+        });
+      });
+  });
+
   it('gets a plant by id', async() => {
     const plant = await getPlant();
     return request(app)
