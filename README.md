@@ -33,22 +33,20 @@ There are many kits avaiable on the market that make it possible to monitor envi
   - "python3": "0.0.1"
 
 ## RAPBERRY PI CONFIGURATION
-- See https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up for more detailed information about installing the Raspbian OS on a Raspberry Pi 4
+- See https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up for more detailed information about installing the Raspbian OS on a Raspberry Pi 4 
 
   - Download the NOOBS operating system from [The Raspberry Pi NOOBS download page](https://www.raspberrypi.org/downloads/noobs/) to the root level of a formatted MicroSD card.  
   - Eject the Micro SD card from your computer and insert it into the Raspberry Pi.
-  - Connect a display, keyboard, mouse, and power to your Raspberry Pi.
-  - Allow the device to boot into Raspbian, and complete the prompts, making sure to set a non-default password for your user.
-  - Confirm the dialog asking you to update the Raspberry Pi's software.
-  - Install updated software when prompted (allow adequate time for this).
-  - Open a terminal from the Accessories sub-menu of the Raspberry menu.
-  - Execute `sudo raspi-config` in the terminal, then navigate to Network Options: Hostname.
-  - Enter your desired Hostname.
-  - Navigate to Interfacing Options.
-  - Enable SSH - this will allow secure, remote access to your Raspberry Pi. 
-  - For photoresistor (light), enable SPI.
-  - For Adafruit TSL-2591, enable I2C.
-  - Restart the device (if you aren't prompted to do so, use `sudo reboot`).
+  - Connect a display, keyboard, mouse, and power supply to your Raspberry Pi.
+  - After booting into Raspbian, complete the prompts, setting a non-default password for Raspberry Pi.
+  - Follow prompts to update the Raspberry Pi's software.
+  - Execute `sudo raspi-config` in a Raspberry Pi terminal
+    -  Navigate to <Network Options: Hostname> to change the hostname.
+    - Navigate to <Interfacing Options>
+      - Enable SSH - this will allow secure, remote access to your Raspberry Pi. 
+      - For photoresistor (light), enable SPI.
+      - For Adafruit TSL-2591, enable I2C.
+  - Restart the device using `sudo reboot`.
 
 ## SENSOR HARDWARE AND SETUP
 - Light: This setup requires the following:
@@ -60,7 +58,7 @@ There are many kits avaiable on the market that make it possible to monitor envi
    
 - Temperature/Humidity: This setup requires the following:
   - DHT22 3 prong temperature/humidity sensor
-  - leads
+  - variety of leads
   - connect positive lead to 5V instead of 3.3V
   ![temperature/humidity sensor setup for raspberry pi](./lib/assets/temp_humid_pi.jpg)
 
