@@ -1,61 +1,40 @@
-# Mid Project for Career Track program at Alchemy Code Lab
+# Plant Parenthood
+## A Secure IoT Plant Sensor Application
 
 Tess Lameyer, Lisa Carpenter, Ian Andrewson, Alan Hermanns, Ben Beekman
 
-## GOAL:
+## DESCRIPTION:
 
-To create a hardware and software solution for remotely monitoring, logging, and uploading data about sunlight and other environmental factors that affect your houseplants, using inexpensive sensors with a Raspberry Pi.
+Plant Parenthood is a secure server-side application that allows users to remotely gather and post data collected from a variety of sensors (light, temperature, humidity) via a Raspberry Pi.  Two-factor authentication ensures the integrity of data.  Data can be interpreted to make recommendations of common house plants that may thrive under matching environmental conditions.
 
 ## TECH STACK:
 
-Frameworks
+- Raspberry Pi 4B
+  - Linux
+  - Python 3.7.4
+- Server
+  - Node.js
+  - MongoDB
 
-- Node.js
-- Python (running on Raspberry Pi)
+## Configuring the Raspberry Pi:
 
-Database
-
-- Mongoose/MongoDB on Heroku server
-- Raspberry Pis using HTTP requests (request library) to post to the express HTTP server on Heroku.
-
-## HARDWARE:
-
-### Raspberry Pi
-
-Our development and testing used Raspberry Pi 4 B, but this project should work for Raspberry Pi 3 B+.
-
-### Raspberry Pi sensors
-
-You will need at least one of the following to use the software:
-
-- LDR Photo Resistor- purchase at https://www.amazon.com/gp/product/B016D737Y4, as well as a 10kΩ resistor (https://www.amazon.com/Projects-100EP51210K0-10k-Resistors-Pack/dp/B0185FIOTA)
-- DHT22 Temperature and Humidity sensor- purchase at https://www.amazon.com/gp/product/B00XW2OFWW
-
-## Python: virtual environment, venv --> PIP needs its virutal environment to run; PyTest is a test environment for python
-
-###Configuring the Raspberry Pi:
-
-- Connect a MicroSD card to your computer, and format it in FAT32 format (you can also buy a pre-loaded MicroSD cart with NOOBS pre-installed, and skip the next few steps).
-- Download the NOOBS operating system from [The Raspberry Pi NOOBS download page](https://www.raspberrypi.org/downloads/noobs/)
-- Once extracted, copied the archive folder's contents to the top level of the formatted SD card
-- Eject the Micro SD card from your computer, and insert it in the slot on the Raspberry Pi
-
-### On the Raspberry Pi
-
-- Connect a display and keyboard to your Raspberry Pi, then connect the power cord.
+### See https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up for detailed information about setting up a Raspberry Pi 4 or follow the directions that follow:
+- Download the NOOBS operating system from [The Raspberry Pi NOOBS download page](https://www.raspberrypi.org/downloads/noobs/) into the root level of a formatted MicroSD card.  
+- Eject the Micro SD card from your computer and insert it into the Raspberry Pi.
+- Connect a display, keyboard, mouse, and power to your Raspberry Pi.
 - Allow the device to boot into Raspbian, and complete the prompts, making sure to set a non-default password for your user.
 - Confirm the dialog asking you to update the Raspberry Pi's software.
-- Install updated software when prompted (this will take some time).
-- Open a Terminal from the Accessories sub-menu of the Raspberry menu.
-- Type `sudo raspi-config` into the terminal, then navigate to `Network Options: Hostname`.
+- Install updated software when prompted (allow adequate time for this).
+- Open a terminal from the Accessories sub-menu of the Raspberry menu.
+- Execute `sudo raspi-config` in the terminal, then navigate to `Network Options: Hostname`.
 - Enter a new name that VNC Server will use to connect to the Pi.
 - Navigate to `Interfacing Options`.
-- Enable SSH.
-- If you're using a photoresistor, enable SPI.
-- If you're using an Adafruit TSL-2591, enable I2C.
+- Enable SSH - this will allow secure, remote access to your Raspberry Pi. 
+- For photoresistor (light), enable SPI.
+- For Adafruit TSL-2591, enable I2C.
 - Restart the device (if you aren't prompted to do so, use `sudo reboot`).
 
-### Setting Up the Sensors
+## SENSOR HARDWARE
 
 - Light: This setup requires the following:
   - 10KOhm resistor
@@ -73,7 +52,7 @@ You will need at least one of the following to use the software:
 
 ### Using your Raspberry Pi from your computer
 
-- In the Terminal on the Raspberry Pi, type `vncserver` and hit return.
+- In a terminal on the Raspberry Pi, execute `vncserver`.
 - The command should respond with a number of details relating to the connection, including a VNC Server catchphrase which will help you ensure you're connecting to the right device, and a phrase "New desktop is `hostname:1` (where hostname is whatever you set earlier) followed by an ip address.
 - On your computer, download and install VNC Client, and open the application.
 - In the address bar of VNC viewer, type the `hostname:1` string that your raspberry pi responded with, and connect.
