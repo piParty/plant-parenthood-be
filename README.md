@@ -41,8 +41,8 @@ There are many kits avaiable on the market that make it possible to monitor envi
   - After booting into Raspbian, complete the prompts, setting a non-default password for Raspberry Pi.
   - Follow prompts to update the Raspberry Pi's software.
   - Execute `sudo raspi-config` in a Raspberry Pi terminal
-    -  Navigate to <Network Options: Hostname> to change the hostname.
-    - Navigate to <Interfacing Options>
+    - Navigate to *Network Options: Hostname* to change the hostname.
+    - Navigate to *Interfacing Options*
       - Enable SSH - this will allow secure, remote access to your Raspberry Pi. 
       - For photoresistor (light), enable SPI.
       - For Adafruit TSL-2591, enable I2C.
