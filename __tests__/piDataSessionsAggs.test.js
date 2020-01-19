@@ -32,11 +32,10 @@ describe('Aggregation tests for piDataSession routes', () => {
             sensorType: session.sensorType,
             piLocationInHouse: session.piLocationInHouse,
             city: cityFromASession,
-            __v: 0
+            __v: session.__v
           });
         });
       });
-
   });
 
   it('should be able to get all of a users data sessions by location in house', async() => {
@@ -60,7 +59,26 @@ describe('Aggregation tests for piDataSession routes', () => {
       });
   });
 
-  it('should be able to get all of a users data sessions by piNickname', () => {
+  it('should be able to get all of a users data sessions by piNickname', async() => {
+    const singlePiOfUser = chance.pickone(user.myPis);
+    const singlePiNicknameOfUser = singlePiOfUser.piNickname;
+    const singlePiIdOfUser = singlePiOfUser._id;
+    const sessionsOfPiNickname = await getPiDataSessions({ piNicknameId: singlePiIdOfUser });
+    console.log(sessionsOfPiNickname);
 
+    return userAgent
+      .get(`/api/v1/piDataSessions/nickname/${singlePiNicknameOfUser}`)
+      .then(res => {
+        sessionsOfPiNickname.forEach(session => {
+          expect(res.body).toContainEqual({
+            _id: expect.any(String),
+            piNicknameId: singlePiIdOfUser,
+            sensorType: session.sensorType,
+            piLocationInHouse: session.piLocationInHouse,
+            city: session.city,
+            __v: session.__v
+          });
+        });
+      });
   });
 });
