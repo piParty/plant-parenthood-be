@@ -66,7 +66,7 @@ There are many kits avaiable on the market that make it possible to monitor envi
   ![temperature/humidity sensor setup for raspberry pi](./lib/assets/temp_humid_pi.jpg)
 
 ## APPLICATION ENDPOINTS
-path | METHOD | Authorization
+METHOD | path | Authorization
 
 ### /api/v1/auth
 #### POST | /signup | any 
@@ -80,7 +80,8 @@ path | METHOD | Authorization
 ### /api/v1/pi-data-sessions
 #### POST | / | any user
 SAMPLE REQUEST
-```{
+```
+{
    "piNicknameId": "abcdef123456abcdef123456",
    "sensorType": "light",
    "piLocationInHouse": "kitchen window",
@@ -88,7 +89,8 @@ SAMPLE REQUEST
 }
 ```
 SAMPLE RESPONSE
-```{
+```
+{
     "sensorType": [
         "light"
     ],
@@ -105,7 +107,8 @@ SAMPLE RESPONSE
 #### GET | /nickname/:nickname | any user
 #### GET | /:id | any user
 SAMPLE RESPONSE
-```{
+```
+{
     "sensorType": [
         "light"
     ],
@@ -129,7 +132,8 @@ SAMPLE RESPONSE
 #### POST | / | admin only
 #### GET | / | any
 SAMPLE RESPONSE
-```{
+```
+[{
         "_id": "5e2367bf147e098f466c8998",
         "commonName": "Aglaonema Marie",
         "sunlightPreference": "low",
@@ -147,12 +151,13 @@ SAMPLE RESPONSE
         "scientificName": "Sansevieria fernieria",
         "sunlightPreference": "low",
         "__v": 0
-    }
-    ```
+}]
+```
 
 #### GET | /light/:type | any
 SAMPLE RESPONSE FOR /light/high
-```[{
+```
+[{
         "_id": "5e236520c898e88eb207700d",
         "commonName": "Fiddle Leaf Fig Tree",
         "sunlightPreference": "high",
@@ -174,7 +179,8 @@ SAMPLE RESPONSE FOR /light/high
 
 #### GET | /:id | any
 SAMPLE RESPONSE
-```{
+```
+{
     "_id": "5e236520c898e88eb207700d",
     "commonName": "Fiddle Leaf Fig Tree",
     "sunlightPreference": "high",
@@ -188,7 +194,8 @@ SAMPLE RESPONSE
 ## DATABASE MODELS
 
 #### User
-```{ email: {
+```
+{ email: {
     type: String, 
     required: true, 
     unique: [true, 'Email is taken']
@@ -220,7 +227,8 @@ SAMPLE RESPONSE
   ```
 
 #### PiDataSession
-```{ piNicknameId: {
+```
+{ piNicknameId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true
   },
@@ -241,7 +249,8 @@ SAMPLE RESPONSE
   ```
 
 #### PiDataPoint
-```{ piDataSessionId: {
+```
+{ piDataSessionId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'PiDataSession',
     required: true
@@ -256,7 +265,8 @@ SAMPLE RESPONSE
   }
 ```
 #### Plant
-```{ commonName: {
+```
+{ commonName: {
     type: String, 
     required: true,
     unique: [true, 'Plant name is already in database']
