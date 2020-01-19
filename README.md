@@ -15,12 +15,22 @@ There are many kits avaiable on the market that make it possible to monitor envi
 
 ## TECH STACK:
 
-- Raspberry Pi 4B
+- Raspberry Pi 4 B
   - Linux
   - Python 3.7.4
 - Server
   - Node.js
   - MongoDB
+- Packages
+  - "bcryptjs": "^2.4.3",
+  - "cookie-parser": "^1.4.4",
+  - "dotenv": "^8.2.0",
+  - "express": "^4.17.1",
+  - "inquirer": "^7.0.3",
+  - "jsonwebtoken": "^8.5.1",
+  - "mongoose": "^5.8.6",
+  - "node-ssh": "^7.0.0",
+  - "python3": "0.0.1"
 
 ## RAPBERRY PI CONFIGURATION AND SENSOR SETUP
 See https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up for more detailed information about setting up a Raspberry Pi 4
