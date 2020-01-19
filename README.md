@@ -32,7 +32,7 @@ There are many kits avaiable on the market that make it possible to monitor envi
   - "node-ssh": "^7.0.0",
   - "python3": "0.0.1"
 
-## RAPBERRY PI CONFIGURATION AND SENSOR SETUP
+## RAPBERRY PI CONFIGURATION
 - See https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up for more detailed information about installing the Raspbian OS on a Raspberry Pi 4
 
   - Download the NOOBS operating system from [The Raspberry Pi NOOBS download page](https://www.raspberrypi.org/downloads/noobs/) to the root level of a formatted MicroSD card.  
@@ -51,12 +51,11 @@ There are many kits avaiable on the market that make it possible to monitor envi
   - Restart the device (if you aren't prompted to do so, use `sudo reboot`).
 
 ## SENSOR HARDWARE AND SETUP
-
 - Light: This setup requires the following:
   - 10KOhm resistor
-  - MC3008 analog to digital converter
+  - MCP3008 analog to digital converter
   - single cell photocell resistor
-  - leads
+  - variety of leads
   ![light sensor setup for raspberry pi](./lib/assets/light_pi.jpg)
    
 - Temperature/Humidity: This setup requires the following:
