@@ -71,8 +71,10 @@ See https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up for mor
 'path' | METHOD | Authorization
 
 * '/api/v1/auth'
-  * '/signup' | POST | Any | SAMPLE REQUEST
-  ```{
+  * '/signup' | POST | Any | 
+    * SAMPLE REQUEST
+  ```
+  {
    "email": "me!@me.com",
    "password": "123",
    "role": "user",
@@ -82,8 +84,10 @@ See https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up for mor
       }
    ]
   }
-* SAMPLE RESPONSE
-```{
+  ```
+    * SAMPLE RESPONSE
+  ```
+  {
     "role": "admin",
     "_id": "5e2369a25a034200173f7e9d",
     "email": "me!@me.com",
@@ -94,7 +98,8 @@ See https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up for mor
         }
     ],
     "__v": 0
-  }```
+  }
+  ```
 
   * '/login' | POST | Any
   * '/verify' | POST | Any
