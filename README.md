@@ -246,11 +246,12 @@ SAMPLE RESPONSE
     required: true
   },
   notes: String
+}
   ```
 
 #### PiDataPoint
 ```
-{ piDataSessionId: {
+  { piDataSessionId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'PiDataSession',
     required: true
@@ -262,11 +263,11 @@ SAMPLE RESPONSE
   piTimestamp: {
     type: Date,
     required: true
-  }
+  }}
 ```
 #### Plant
 ```
-{ commonName: {
+  { commonName: {
     type: String, 
     required: true,
     unique: [true, 'Plant name is already in database']
@@ -281,6 +282,7 @@ SAMPLE RESPONSE
   sunlightPreference: {
     type: String,  
     enum: ['low', 'medium', 'high']
+  }
   }
   ```
 
