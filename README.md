@@ -103,9 +103,91 @@ There are many kits avaiable on the market that make it possible to monitor envi
 ## DATABASE MODELS
 
 #### User
+```email: {
+    type: String, 
+    required: true, 
+    unique: [true, 'Email is taken']
+  }, 
+  passwordHash: {
+    type: String, 
+    required: true
+  }, 
+  role: {
+    type: String, 
+    required: true,
+    enum: ['admin', 'user'],
+    default: 'user'
+  }, 
+  myPis: {
+    type: [description: String, 
+  piNickname: {
+    type: String, 
+    required: true 
+  }],
+    required: true, 
+    validate: {
+      validator: function(myPis) {
+        return myPis.length > 0;
+      },
+      message: 'Pi registration required.'
+    }
+  }
+  ```
+
 #### PiDataSession
+```piNicknameId: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true
+  },
+  sensorType: {
+    type: [String],
+    enum: ['light', 'humidity', 'temperature'],
+    required: true
+  },
+  piLocationInHouse: {
+    type: String,
+    required: true
+  },
+  city: {
+    type: String,
+    required: true
+  },
+  notes: String
+  ```
+
 #### PiDataPoint
+```piDataSessionId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'PiDataSession',
+    required: true
+  },
+  data: {
+    type: Object,
+    required: true
+  },
+  piTimestamp: {
+    type: Date,
+    required: true
+  }
+```
 #### Plant
+```commonName: {
+    type: String, 
+    required: true,
+    unique: [true, 'Plant name is already in database']
+  }, 
+  scientificName: {
+    family: String, 
+    genus: String, 
+    species: String
+  }, 
+  waterPreference: String,
+
+  sunlightPreference: {
+    type: String,  
+    enum: ['low', 'medium', 'high']
+  }
+  ```
 
 ## INITIALIZING A REMOTE DATA COLLECTION SESSION
 
