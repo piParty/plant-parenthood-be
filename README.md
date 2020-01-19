@@ -42,9 +42,9 @@ There are many kits avaiable on the market that make it possible to monitor envi
   - Confirm the dialog asking you to update the Raspberry Pi's software.
   - Install updated software when prompted (allow adequate time for this).
   - Open a terminal from the Accessories sub-menu of the Raspberry menu.
-  - Execute `sudo raspi-config` in the terminal, then navigate to `Network Options: Hostname`.
+  - Execute `sudo raspi-config` in the terminal, then navigate to Network Options: Hostname.
   - Enter your desired Hostname.
-  - Navigate to `Interfacing Options`.
+  - Navigate to Interfacing Options.
   - Enable SSH - this will allow secure, remote access to your Raspberry Pi. 
   - For photoresistor (light), enable SPI.
   - For Adafruit TSL-2591, enable I2C.
@@ -66,7 +66,7 @@ There are many kits avaiable on the market that make it possible to monitor envi
   ![temperature/humidity sensor setup for raspberry pi](./lib/assets/temp_humid_pi.jpg)
 
 ## APPLICATION ENDPOINTS
-'path' | METHOD | Authorization
+path | METHOD | Authorization
 
 ### /api/v1/auth
 #### POST | /signup | Any 
@@ -103,7 +103,7 @@ There are many kits avaiable on the market that make it possible to monitor envi
 ## DATABASE MODELS
 
 #### User
-```email: {
+```{ email: {
     type: String, 
     required: true, 
     unique: [true, 'Email is taken']
@@ -135,7 +135,7 @@ There are many kits avaiable on the market that make it possible to monitor envi
   ```
 
 #### PiDataSession
-```piNicknameId: {
+```{ piNicknameId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true
   },
@@ -156,7 +156,7 @@ There are many kits avaiable on the market that make it possible to monitor envi
   ```
 
 #### PiDataPoint
-```piDataSessionId: {
+```{ piDataSessionId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'PiDataSession',
     required: true
@@ -171,7 +171,7 @@ There are many kits avaiable on the market that make it possible to monitor envi
   }
 ```
 #### Plant
-```commonName: {
+```{ commonName: {
     type: String, 
     required: true,
     unique: [true, 'Plant name is already in database']
