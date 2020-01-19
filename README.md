@@ -101,9 +101,6 @@ SAMPLE RESPONSE
     "dataSession": "<data_session_token"
 }
 ```
-#### GET | /location/:location | any user
-#### GET | /city/:city | any user
-#### GET | /nickname/:nickname | any user
 #### GET | /:id | any user
 SAMPLE RESPONSE
 ```
@@ -123,9 +120,6 @@ SAMPLE RESPONSE
 ### /api/v1/pi-data-points
 #### POST | / | any user with valid token
 #### GET | / | any User
-#### GET | /stats/by-hour | any user
-#### GET | /stats/raw | any user
-#### GET | /:sessionId | any user
 
 ### /api/v1/plants
 #### POST | / | admin only
