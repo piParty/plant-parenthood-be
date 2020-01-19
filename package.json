@@ -34,7 +34,8 @@
     "inquirer": "^7.0.3",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.8.6",
-    "node-ssh": "^7.0.0"
+    "node-ssh": "^7.0.0",
+    "python3": "0.0.1"
   },
   "directories": {
     "lib": "lib"
