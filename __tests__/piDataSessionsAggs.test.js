@@ -4,13 +4,19 @@ const chance = require('chance')();
 
 describe('Aggregation tests for piDataSession routes', () => {
 
-  it('should be able to get all of a users data sessions by city', async() => {
+  let user;
+  let userPiIds;
+  let sessions;
+  beforeEach(async() => {
     //get the user information of userAgent
-    const user = await getUser({ email: 'user0@tess.com' });
-    //get all of their pis
-    const userPiIds = user.myPis.map(pi => pi._id);
+    user = await getUser({ email: 'user0@tess.com' });
+    //get all of their pis ids
+    userPiIds = user.myPis.map(pi => pi._id);
     //Must promise.all getting the sesions in case there are multiple pies
-    const sessions = await Promise.all(userPiIds.map(async(id) => await getPiDataSessions({ piNicknameId: id })));
+    sessions = await Promise.all(userPiIds.map(async(id) => await getPiDataSessions({ piNicknameId: id })));
+  });
+
+  it('should be able to get all of a users data sessions by city', async() => {
     const cityFromASession = chance.pickone(sessions[0]).city;
     const sessionsOfCity = await getPiDataSessions({ city: cityFromASession });
     console.log(sessionsOfCity);
@@ -22,7 +28,7 @@ describe('Aggregation tests for piDataSession routes', () => {
         sessionsOfCity.forEach(session => {
           expect(res.body).toContainEqual({
             _id: expect.any(String),
-            piNicknameId: session._id.toString(),
+            piNicknameId: session.piNicknameId.toString(),
             sensorType: session.sensorType,
             piLocationInHouse: session.piLocationInHouse,
             city: cityFromASession,
@@ -33,8 +39,25 @@ describe('Aggregation tests for piDataSession routes', () => {
 
   });
 
-  it('should be able to get all of a users data sessions by location in house', () => {
+  it('should be able to get all of a users data sessions by location in house', async() => {
+    const locationFromASession = chance.pickone(sessions[0]).piLocationInHouse;
+    const sessionsOfLocation = await getPiDataSessions({ piLocationInHouse: locationFromASession });
+    console.log(sessionsOfLocation);
 
+    return userAgent
+      .get(`/api/v1/piDataSessions/location/${locationFromASession}`)
+      .then(res => {
+        sessionsOfLocation.forEach(session => {
+          expect(res.body).toContainEqual({
+            _id: expect.any(String),
+            piNicknameId: session.piNicknameId.toString(),
+            sensorType: session.sensorType,
+            piLocationInHouse: locationFromASession,
+            city: session.city,
+            __v: session.__v
+          });
+        });
+      });
   });
 
   it('should be able to get all of a users data sessions by piNickname', () => {
