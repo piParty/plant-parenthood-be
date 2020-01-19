@@ -3,9 +3,24 @@
 
 Tess Lameyer, Lisa Carpenter, Ian Andrewson, Alan Hermanns, Ben Beekman
 
-## DESCRIPTION:
+## DESCRIPTION
 
 Plant Parenthood is a secure server-side application that allows users to remotely gather and post data collected from a variety of sensors (light, temperature, humidity) via a Raspberry Pi.  Two-factor authentication ensures the integrity of data.  Data can be interpreted to make recommendations of common house plants that may thrive under matching environmental conditions.
+
+## PROBLEM DOMAIN
+
+There are many kits avaiable on the market that make it possible to monitor environmental conditions for house plants.  However, the market lacks an application that caters plant recommendations to users based on baseline environmental conditions.  This application aims to fill this gap, providing a secure, simple way to collect data remotely pertaining to the light, temperature, and humidity at a specific location.  These environmental indicators can then be used to customize plant recommendations for each user.  
+
+## VERSION 1.0.0
+
+## LICENSING
+
+Copyright 2020 Pi Party
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ## TECH STACK:
 
@@ -16,9 +31,11 @@ Plant Parenthood is a secure server-side application that allows users to remote
   - Node.js
   - MongoDB
 
-## Configuring the Raspberry Pi:
+## RAPBERRY PI CONFIGURATION AND SENSOR SETUP
+See https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up for more detailed information about setting up a Raspberry Pi 4
 
-### See https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up for detailed information about setting up a Raspberry Pi 4 or follow the directions that follow:
+### GENERAL RASPBERRY PI SET UP
+
 - Download the NOOBS operating system from [The Raspberry Pi NOOBS download page](https://www.raspberrypi.org/downloads/noobs/) into the root level of a formatted MicroSD card.  
 - Eject the Micro SD card from your computer and insert it into the Raspberry Pi.
 - Connect a display, keyboard, mouse, and power to your Raspberry Pi.
@@ -34,7 +51,7 @@ Plant Parenthood is a secure server-side application that allows users to remote
 - For Adafruit TSL-2591, enable I2C.
 - Restart the device (if you aren't prompted to do so, use `sudo reboot`).
 
-## SENSOR HARDWARE
+### SENSOR HARDWARE AND SETUP
 
 - Light: This setup requires the following:
   - 10KOhm resistor
@@ -49,20 +66,37 @@ Plant Parenthood is a secure server-side application that allows users to remote
   - connect positive lead to 5V instead of 3.3V
   ![temperature/humidity sensor setup for raspberry pi](./lib/assets/temp_humid_pi.jpg)
 
+### APPLICATION ENDPOINTS
+'path' | METHOD | Authorization
 
-### Using your Raspberry Pi from your computer
+* '/api/v1/auth'
+  * '/signup' | POST | Any
+  * '/login' | POST | Any
+  * '/verify' | POST | Any
+  * '/myPis/:id' | PATCH | Admin Only
+  * '/change-role/:id' | PATCH | Admin Only
+  * '/logout | POST' | Any
+  * '/:id' | DELETE | Admin Only
 
-- In a terminal on the Raspberry Pi, execute `vncserver`.
-- The command should respond with a number of details relating to the connection, including a VNC Server catchphrase which will help you ensure you're connecting to the right device, and a phrase "New desktop is `hostname:1` (where hostname is whatever you set earlier) followed by an ip address.
-- On your computer, download and install VNC Client, and open the application.
-- In the address bar of VNC viewer, type the `hostname:1` string that your raspberry pi responded with, and connect.
-- You'll be prompted for your username and password, then you'll connect remotely to the device.
+* /api/v1/pi-data-sessions
+  * '/' | POST Any User
+  * '/location/:location' | GET | Any User
+  * '/city/:city' | GET | Any User
+  * '/nickname/:nickname' | GET | Any User
+  * '/:id' | GET | Any User
+  * '/' | GET | Admin Only
 
-## How It Works
+* /api/v1/pi-data-points
+  * '/'| POST | Any
+  * '/' | GET | Any User
+  * '/stats/by-hour' | GET | Any User
+  * '/stats/raw' | GET | Any User
+  * '/:sessionId' | GET 
 
-- user signs up
-- verification happens (ensureUserAuth) to get the user to the page on the front end where the user can define the parameters of the pi data session
-- user fills out form data for the session --> .post to the Heroku server (verify-session route) --> server sends back Token to the front end
-- Token is sent from user front end computer to the raspberry pi directly via SSH command (shell command)
-- Raspberry pi will use the token --> pulls info out of the token (id of session), verify that token was signed by our server --> uses this info to make the post to Heroku server via HTTP request (Python script)
-- always a new token with every session!
+* /api/v1/plants
+  * '/' | POST | Admin Only
+  * '/' | GET | Any
+  * '/light/:type' | GET | Any
+  * '/:id' | GET | Any
+  * '/:id' | PATCH | Admin Only
+  * '/:id' | DELETE | Admin Only
