@@ -47,7 +47,7 @@ describe('user aggregation route tests', () => {
                   //expecting two sessions
                   expect(res.body).toContainEqual([{
                     _id: expect.any(String), 
-                    piNicknameId: user.piNickname[0]._id, 
+                    piNicknameId: user.myPis[0]._id, 
                     sensorType: 'light',
                     piLocationInHouse: 'kitchen',
                     city: 'Portland',
@@ -55,7 +55,7 @@ describe('user aggregation route tests', () => {
                     dataSession: expect.any(String)
                   }, {
                     _id: expect.any(String), 
-                    piNicknameId: user.piNickname[1]._id, 
+                    piNicknameId: user.myPis[1]._id, 
                     sensorType: 'light',
                     piLocationInHouse: 'kitchen',
                     city: 'Portland',
