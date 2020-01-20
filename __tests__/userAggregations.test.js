@@ -18,7 +18,7 @@ describe('user aggregation route tests', () => {
         .post('/api/v1/pi-data-sessions')
         .send({ 
           piNicknameId: user.myPis[0]._id, 
-          sensorType: 'light', 
+          sensorType: 'temperature', 
           piLocationInHouse: 'kitchen', 
           city: 'Portland'
         })
@@ -31,7 +31,7 @@ describe('user aggregation route tests', () => {
             .post('/api/v1/pi-data-sessions')
             .send({ 
               piNicknameId: user.myPis[1]._id, 
-              sensorType: 'light', 
+              sensorType: 'temperature', 
               piLocationInHouse: 'kitchen', 
               city: 'Portland' 
             })
@@ -40,7 +40,7 @@ describe('user aggregation route tests', () => {
               dataSessionId2 = res.body._id;
               return userAgent
               //hitting aggregation route
-                .get(`/api/v1/auth/user-pi-data-sessions/${user._id}`)
+                .get(`/api/v1/user-aggregations/user-pi-data-sessions/${user._id}`)
                 .then(res => {
                   // console.log(res, 'this is the response');
                   console.log(dataSessionId1, dataSessionId2);
@@ -48,7 +48,7 @@ describe('user aggregation route tests', () => {
                   expect(res.body).toContainEqual([{
                     _id: dataSessionId1, 
                     piNicknameId: user.myPis[0]._id, 
-                    sensorType: 'light',
+                    sensorType: 'temperature',
                     piLocationInHouse: 'kitchen',
                     city: 'Portland',
                     __v: 0,
@@ -56,7 +56,7 @@ describe('user aggregation route tests', () => {
                   }, {
                     _id: dataSessionId2, 
                     piNicknameId: user.myPis[1]._id, 
-                    sensorType: 'light',
+                    sensorType: 'temperature',
                     piLocationInHouse: 'kitchen',
                     city: 'Portland',
                     __v: 0,
