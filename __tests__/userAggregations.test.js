@@ -26,10 +26,9 @@ describe('Aggregation tests for piDataSession routes', () => {
     sessions = await Promise.all(userPiIds.map(async(id) => await getPiDataSessions({ piNicknameId: id })));
   });
 
-  it.only('should be able to get all of a users data sessions by city', async() => {
+  it('should be able to get all of a users data sessions by city', async() => {
     const cityFromASession = chance.pickone(sessions[0]).city;
     const sessionsOfCity = await getPiDataSessions({ city: cityFromASession });
-    console.log(sessionsOfCity);
     
     return userAgent
       //pick a city to get sessions for.
@@ -48,13 +47,12 @@ describe('Aggregation tests for piDataSession routes', () => {
       });
   });
 
-  it('should be able to get all of a users data sessions by location in house', async() => {
+  it.only('should be able to get all of a users data sessions by location in house', async() => {
     const locationFromASession = chance.pickone(sessions[0]).piLocationInHouse;
     const sessionsOfLocation = await getPiDataSessions({ piLocationInHouse: locationFromASession });
-    console.log(sessionsOfLocation);
 
     return userAgent
-      .get(`/api/v1/pi-data-sessions/location/${locationFromASession}`)
+      .get(`/api/v1/user-aggregations/location/${locationFromASession}&${user._id}`)
       .then(res => {
         sessionsOfLocation.forEach(session => {
           expect(res.body).toContainEqual({
