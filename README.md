@@ -9,7 +9,7 @@ Plant Parenthood is a secure server-side application that allows users to remote
 
 ## PROBLEM DOMAIN
 
-There are many kits avaiable on the market that make it possible to monitor environmental conditions for house plants.  However, the market lacks an application that caters plant recommendations to users based on baseline environmental conditions.  This application aims to fill this gap, providing a secure, simple way to collect data remotely pertaining to the light, temperature, and humidity at a specific location.  These environmental indicators can then be used to customize plant recommendations for each user.  
+There are many kits avaiable on the market that make it possible to monitor environmental conditions for house plants.  However, the market lacks an application that caters plant recommendations to users based on baseline environmental conditions.  This application aims to fill this gap, providing a secure, simple way to collect data remotely pertaining to the light, temperature, and humidity at a specific location.  These environmental indicators can then be used to customize plant recommendations for each user.
 
 ## VERSION 1.0.0
 
@@ -42,9 +42,9 @@ There are many kits avaiable on the market that make it possible to monitor envi
   - "python3": "0.0.1"
 
 ## RAPBERRY PI CONFIGURATION
-- See https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up for more detailed information about installing the Raspbian OS on a Raspberry Pi 4 
+- See https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up for more detailed information about installing the Raspbian OS on a Raspberry Pi 4
 
-  - Download the NOOBS operating system from [The Raspberry Pi NOOBS download page](https://www.raspberrypi.org/downloads/noobs/) to the root level of a formatted MicroSD card.  
+  - Download the NOOBS operating system from [The Raspberry Pi NOOBS download page](https://www.raspberrypi.org/downloads/noobs/) to the root level of a formatted MicroSD card.
   - Eject the Micro SD card from your computer and insert it into the Raspberry Pi.
   - Connect a display, keyboard, mouse, and power supply to your Raspberry Pi.
   - After booting into Raspbian, complete the prompts, setting a non-default password for Raspberry Pi.
@@ -52,12 +52,42 @@ There are many kits avaiable on the market that make it possible to monitor envi
   - Execute `sudo raspi-config` in a Raspberry Pi terminal
     - Navigate to *Network Options: Hostname* to change the hostname.
     - Navigate to *Interfacing Options*
-      - Enable SSH - this will allow secure, remote access to your Raspberry Pi. 
+      - Enable SSH - this will allow secure, remote access to your Raspberry Pi.
       - For photoresistor (light), enable SPI.
-      - For Adafruit TSL-2591, enable I2C.
+      - For Adafruit TSL-2591 (temperature/humidity), enable I2C.
   - Restart the device using `sudo reboot`.
 
+### Optional instructions to connect to the Raspberry Pi without a display or keyboard attached:
+- You'll need to first make a few changes to your configuration to connect to the Raspberry Pi's GUI from your computer in VNC Viewer, even if there wasn't an HDMI cord connected when you started up.
+- In a terminal on the Raspberry Pi, type `sudo nano /boot/config.txt`.
+- Scroll through the file and uncomment these lines (by removing the # symbol at the beginning):
+```
+framebuffer_width=1280
+framebuffer_height=720
+hdmi_force_hotplug=1
+```
+- Exit with ctrl-x, then type Y to save the changes and reboot the pi.
+- To ensure you'll be able to connect even if your IP address changes, register a free RealVNC account and sign both your computer and your Raspberry Pi into that account.
+- On the Raspberry Pi, type `vncserver` and hit return.
+- The command should respond with a number of details relating to the connection, including a VNC Server catchphrase which will help you ensure you're connecting to the right device, and a phrase "New desktop is `hostname:1` (where hostname is whatever you set earlier) followed by an ip address.
+- On your computer, download and install VNC Client, and open the application.
+- In the address bar of VNC viewer, type the `hostname:1` string that your raspberry pi responded with, and connect.
+- You'll be prompted for your username and password, then connect remotely to the device.
+
 ## SENSOR HARDWARE AND SETUP
+Next, you'll want to set up a terminal on the Raspberry Pi. Enter the following commands to ensure that you have the latest OS updates, install both python 3 and pip, and ensure you have the latest versions of the setuptools, wheel and pip python packages,
+```
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get install python-dev python3-dev python3-pip
+sudo python3 -m pip install --upgrade pip setuptools wheel
+```
+
+You'll then want to install the libraries that allow you to interact with your installed sensors.
+To use the photoresistor to measure light, you'll want to install spidev by entering `sudo pip3 install spidev` in the terminal.
+To use the DHT22 Humidity/Temperature sensor, enter `sudo pip3 install Adafruit_DHT` in the terminal.
+
+
 ### Light
 Required Hardware
   - 10KOhm resistor
@@ -65,19 +95,19 @@ Required Hardware
   - single cell photocell resistor
   - variety of leads
   ![light sensor setup for raspberry pi](./lib/assets/light_pi.jpg)
-   
+
 ### Temperature/Humidity
 Required Hardware
   - DHT22 3 prong temperature/humidity sensor
   - variety of leads
   - connect positive lead to 5V instead of 3.3V
   ![temperature/humidity sensor setup for raspberry pi](./lib/assets/temp_humid_pi.jpg)
-
+Open a terminal and enter the following command to install the package you need to
 ## APPLICATION ENDPOINTS
 METHOD | path | Authorization
 
 ### /api/v1/auth
-#### POST | /signup | any 
+#### POST | /signup | any
 #### POST | /login | any
 #### POST | /verify | any
 #### PATCH | /myPis/:id | admin only
@@ -197,29 +227,29 @@ SAMPLE RESPONSE
 
 #### User
 ```
-{ 
+{
   email: {
-    type: String, 
-    required: true, 
+    type: String,
+    required: true,
     unique: [true, 'Email is taken']
-  }, 
+  },
   passwordHash: {
-    type: String, 
+    type: String,
     required: true
-  }, 
+  },
   role: {
-    type: String, 
+    type: String,
     required: true,
     enum: ['admin', 'user'],
     default: 'user'
-  }, 
+  },
   myPis: {
-    type: [description: String, 
+    type: [description: String,
   piNickname: {
-    type: String, 
-    required: true 
+    type: String,
+    required: true
   }],
-    required: true, 
+    required: true,
     validate: {
       validator: function(myPis) {
         return myPis.length > 0;
@@ -231,7 +261,7 @@ SAMPLE RESPONSE
 
 #### PiDataSession
 ```
-{ 
+{
   piNicknameId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true
@@ -255,7 +285,7 @@ SAMPLE RESPONSE
 
 #### PiDataPoint
 ```
-{ 
+{
   piDataSessionId: {
   type: mongoose.Schema.Types.ObjectId,
   ref: 'PiDataSession',
@@ -273,20 +303,20 @@ SAMPLE RESPONSE
 ```
 #### Plant
 ```
-{ 
+{
   commonName: {
-  type: String, 
+  type: String,
   required: true,
   unique: [true, 'Plant name is already in database']
-  }, 
+  },
   scientificName: {
-    family: String, 
-    genus: String, 
+    family: String,
+    genus: String,
     species: String
-  }, 
+  },
   waterPreference: String,
   sunlightPreference: {
-    type: String,  
+    type: String,
     enum: ['low', 'medium', 'high']
   }
 }
