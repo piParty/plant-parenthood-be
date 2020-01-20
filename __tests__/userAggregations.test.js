@@ -36,15 +36,16 @@ describe('user aggregation route tests', () => {
               city: 'Portland' 
             })
             .then(res => {
+              console.log(res.body, 'this is the second body');
               dataSessionId2 = res.body._id;
               return userAgent
               //hitting aggregation route
                 .get(`/api/v1/auth/user-pi-data-sessions/${user._id}`)
                 .then(res => {
-                  console.log(res.body, 'this is the body');
+                  console.log(res, 'this is the response');
                   console.log(dataSessionId1, dataSessionId2);
                   //expecting two sessions
-                  expect(res.body).toEqual([{
+                  expect(res.body).toContainEqual([{
                     _id: expect.any(String), 
                     piNicknameId: user.piNickname[0]._id, 
                     sensorType: 'light',
