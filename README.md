@@ -59,6 +59,8 @@ There are many kits avaiable on the market that make it possible to monitor envi
       - For Adafruit TSL-2591 (temperature/humidity), enable I2C.
   - Restart the device using `sudo reboot`.
 
+
+
 ## SENSOR HARDWARE AND SETUP
 
 Next, you'll want to set up a terminal on the Raspberry Pi. Enter the following commands to ensure that you have the latest OS updates, install both python 3 and pip, and ensure you have the latest versions of the setuptools, wheel and pip python packages,
@@ -93,7 +95,6 @@ Required Hardware
 - variety of leads
 - connect positive lead to 5V instead of 3.3V
   ![temperature/humidity sensor setup for raspberry pi](./lib/assets/temp_humid_pi.jpg)
-  Open a terminal and enter the following command to install the package you need to
 
 ## APPLICATION ENDPOINTS
 
