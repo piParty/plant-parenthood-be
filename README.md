@@ -1,15 +1,16 @@
 # :seedling: Plant Parenthood :seedling:
+
 ## A Secure IoT Plant Sensor Application
 
 Tess Lameyer, Lisa Carpenter, Ian Andrewson, Alan Hermanns, Ben Beekman
 
 ## DESCRIPTION
 
-Plant Parenthood is a secure server-side application that allows users to remotely gather and post data collected from a variety of sensors (light, temperature, humidity) via a Raspberry Pi.  Two-factor authentication ensures the integrity of data.  Data can be interpreted to make recommendations of common house plants that may thrive under matching environmental conditions.
+Plant Parenthood is a secure server-side application that allows users to remotely gather and post data collected from a variety of sensors (light, temperature, humidity) via a Raspberry Pi. Two-factor authentication ensures the integrity of data. Data can be interpreted to make recommendations of common house plants that may thrive under matching environmental conditions.
 
 ## PROBLEM DOMAIN
 
-There are many kits avaiable on the market that make it possible to monitor environmental conditions for house plants.  However, the market lacks an application that caters plant recommendations to users based on baseline environmental conditions.  This application aims to fill this gap, providing a secure, simple way to collect data remotely pertaining to the light, temperature, and humidity at a specific location.  These environmental indicators can then be used to customize plant recommendations for each user.
+There are many kits avaiable on the market that make it possible to monitor environmental conditions for house plants. However, the market lacks an application that caters plant recommendations to users based on baseline environmental conditions. This application aims to fill this gap, providing a secure, simple way to collect data remotely pertaining to the light, temperature, and humidity at a specific location. These environmental indicators can then be used to customize plant recommendations for each user.
 
 ## VERSION 1.0.0
 
@@ -42,6 +43,7 @@ There are many kits avaiable on the market that make it possible to monitor envi
   - "python3": "0.0.1"
 
 ## RAPBERRY PI CONFIGURATION
+
 - See https://projects.raspberrypi.org/en/projects/raspberry-pi-setting-up for more detailed information about installing the Raspbian OS on a Raspberry Pi 4
 
   - Download the NOOBS operating system from [The Raspberry Pi NOOBS download page](https://www.raspberrypi.org/downloads/noobs/) to the root level of a formatted MicroSD card.
@@ -50,32 +52,17 @@ There are many kits avaiable on the market that make it possible to monitor envi
   - After booting into Raspbian, complete the prompts, setting a non-default password for Raspberry Pi.
   - Follow prompts to update the Raspberry Pi's software.
   - Execute `sudo raspi-config` in a Raspberry Pi terminal
-    - Navigate to *Network Options: Hostname* to change the hostname.
-    - Navigate to *Interfacing Options*
+    - Navigate to _Network Options: Hostname_ to change the hostname.
+    - Navigate to _Interfacing Options_
       - Enable SSH - this will allow secure, remote access to your Raspberry Pi.
       - For photoresistor (light), enable SPI.
       - For Adafruit TSL-2591 (temperature/humidity), enable I2C.
   - Restart the device using `sudo reboot`.
 
-### Optional instructions to connect to the Raspberry Pi without a display or keyboard attached:
-- You'll need to first make a few changes to your configuration to connect to the Raspberry Pi's GUI from your computer in VNC Viewer, even if there wasn't an HDMI cord connected when you started up.
-- In a terminal on the Raspberry Pi, type `sudo nano /boot/config.txt`.
-- Scroll through the file and uncomment these lines (by removing the # symbol at the beginning):
-```
-framebuffer_width=1280
-framebuffer_height=720
-hdmi_force_hotplug=1
-```
-- Exit with ctrl-x, then type Y to save the changes and reboot the pi.
-- To ensure you'll be able to connect even if your IP address changes, register a free RealVNC account and sign both your computer and your Raspberry Pi into that account.
-- On the Raspberry Pi, type `vncserver` and hit return.
-- The command should respond with a number of details relating to the connection, including a VNC Server catchphrase which will help you ensure you're connecting to the right device, and a phrase "New desktop is `hostname:1` (where hostname is whatever you set earlier) followed by an ip address.
-- On your computer, download and install VNC Client, and open the application.
-- In the address bar of VNC viewer, type the `hostname:1` string that your raspberry pi responded with, and connect.
-- You'll be prompted for your username and password, then connect remotely to the device.
-
 ## SENSOR HARDWARE AND SETUP
+
 Next, you'll want to set up a terminal on the Raspberry Pi. Enter the following commands to ensure that you have the latest OS updates, install both python 3 and pip, and ensure you have the latest versions of the setuptools, wheel and pip python packages,
+
 ```
 sudo apt-get update
 sudo apt-get upgrade
@@ -84,40 +71,56 @@ sudo python3 -m pip install --upgrade pip setuptools wheel
 ```
 
 You'll then want to install the libraries that allow you to interact with your installed sensors.
-To use the photoresistor to measure light, you'll want to install spidev by entering `sudo pip3 install spidev` in the terminal.
-To use the DHT22 Humidity/Temperature sensor, enter `sudo pip3 install Adafruit_DHT` in the terminal.
 
+- To use the photoresistor to measure light, you'll want to install spidev by entering `sudo pip3 install spidev` in the terminal.
+- To use the DHT22 Humidity/Temperature sensor, enter `sudo pip3 install Adafruit_DHT` in the terminal.
 
 ### Light
+
 Required Hardware
-  - 10KOhm resistor
-  - MCP3008 analog to digital converter
-  - single cell photocell resistor
-  - variety of leads
+
+- 10KOhm resistor
+- MCP3008 analog to digital converter
+- single cell photocell resistor
+- variety of leads
   ![light sensor setup for raspberry pi](./lib/assets/light_pi.jpg)
 
 ### Temperature/Humidity
+
 Required Hardware
-  - DHT22 3 prong temperature/humidity sensor
-  - variety of leads
-  - connect positive lead to 5V instead of 3.3V
+
+- DHT22 3 prong temperature/humidity sensor
+- variety of leads
+- connect positive lead to 5V instead of 3.3V
   ![temperature/humidity sensor setup for raspberry pi](./lib/assets/temp_humid_pi.jpg)
-Open a terminal and enter the following command to install the package you need to
+  Open a terminal and enter the following command to install the package you need to
+
 ## APPLICATION ENDPOINTS
+
 METHOD | path | Authorization
 
 ### /api/v1/auth
+
 #### POST | /signup | any
+
 #### POST | /login | any
+
 #### POST | /verify | any
+
 #### PATCH | /myPis/:id | admin only
+
 #### PATCH | /change-role/:id | admin only
+
 #### POST | /logout | any
+
 #### DELETE | /:id | admin only
 
 ### /api/v1/pi-data-sessions
+
 #### POST | / | any user
+
 SAMPLE REQUEST
+
 ```
 {
    "piNicknameId": "abcdef123456abcdef123456",
@@ -126,7 +129,9 @@ SAMPLE REQUEST
    "city": "Portland"
 }
 ```
+
 SAMPLE RESPONSE
+
 ```
 {
     "sensorType": [
@@ -140,8 +145,11 @@ SAMPLE RESPONSE
     "dataSession": "<data_session_token"
 }
 ```
+
 #### GET | /:id | any user
+
 SAMPLE RESPONSE
+
 ```
 {
     "sensorType": [
@@ -154,16 +162,23 @@ SAMPLE RESPONSE
     "__v": 0
 }
 ```
+
 #### GET | / | admin only
 
 ### /api/v1/pi-data-points
+
 #### POST | / | any user with valid token
+
 #### GET | / | any User
 
 ### /api/v1/plants
+
 #### POST | / | admin only
+
 #### GET | / | any
+
 SAMPLE RESPONSE
+
 ```
 [{
     "_id": "5e2367bf147e098f466c8998",
@@ -187,7 +202,9 @@ SAMPLE RESPONSE
 ```
 
 #### GET | /light/:type | any
+
 SAMPLE RESPONSE FOR /light/high
+
 ```
 [{
     "_id": "5e236520c898e88eb207700d",
@@ -210,7 +227,9 @@ SAMPLE RESPONSE FOR /light/high
 ```
 
 #### GET | /:id | any
+
 SAMPLE RESPONSE
+
 ```
 {
   "_id": "5e236520c898e88eb207700d",
@@ -221,11 +240,13 @@ SAMPLE RESPONSE
 ```
 
 #### PATCH | /:id | admin only
+
 #### DELETE | /:id | admin only
 
 ## DATABASE MODELS
 
 #### User
+
 ```
 {
   email: {
@@ -257,9 +278,10 @@ SAMPLE RESPONSE
       message: 'Pi registration required.'
     }
   }
-  ```
+```
 
 #### PiDataSession
+
 ```
 {
   piNicknameId: {
@@ -281,9 +303,10 @@ SAMPLE RESPONSE
   },
   notes: String
 }
-  ```
+```
 
 #### PiDataPoint
+
 ```
 {
   piDataSessionId: {
@@ -301,7 +324,9 @@ SAMPLE RESPONSE
   }
 }
 ```
+
 #### Plant
+
 ```
 {
   commonName: {
@@ -320,7 +345,7 @@ SAMPLE RESPONSE
     enum: ['low', 'medium', 'high']
   }
 }
-  ```
+```
 
 ## INITIALIZING A REMOTE DATA COLLECTION SESSION
 
