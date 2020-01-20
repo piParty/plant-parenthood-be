@@ -63,7 +63,12 @@ There are many kits avaiable on the market that make it possible to monitor envi
 
 ## SENSOR HARDWARE AND SETUP
 
-Next, you'll want to set up a terminal on the Raspberry Pi. Enter the following commands to ensure that you have the latest OS updates, install both python 3 and pip, and ensure you have the latest versions of the setuptools, wheel and pip python packages,
+The following should be installed and up-to-date on Raspberry Pi:
+  - python 3
+  - setuptools, 
+  - wheel
+  - pip 
+  - python
 
 ```
 sudo apt-get update
@@ -72,10 +77,12 @@ sudo apt-get install python-dev python3-dev python3-pip
 sudo python3 -m pip install --upgrade pip setuptools wheel
 ```
 
-You'll then want to install the libraries that allow you to interact with your installed sensors.
+## REQUIRED INSTALLATIONS ON RASPBERRY PI
 
-- To use the photoresistor to measure light, you'll want to install spidev by entering `sudo pip3 install spidev` in the terminal.
-- To use the DHT22 Humidity/Temperature sensor, enter `sudo pip3 install Adafruit_DHT` in the terminal.
+- To use the photoresistor to measure light, install spidev:
+ `sudo pip3 install spidev`
+- To use the DHT22 Humidity/Temperature sensor, install Adafruit_DHT:
+ `sudo pip3 install Adafruit_DHT` 
 
 ### Light
 
