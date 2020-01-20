@@ -42,7 +42,7 @@ describe('user aggregation route tests', () => {
               //hitting aggregation route
                 .get(`/api/v1/auth/user-pi-data-sessions/${user._id}`)
                 .then(res => {
-                  console.log(res, 'this is the response');
+                  // console.log(res, 'this is the response');
                   console.log(dataSessionId1, dataSessionId2);
                   //expecting two sessions
                   expect(res.body).toContainEqual([{
