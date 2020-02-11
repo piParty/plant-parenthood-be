@@ -10,7 +10,7 @@ Plant Parenthood is a secure server-side application that allows users to remote
 
 ## PROBLEM DOMAIN
 
-There are many kits avaiable on the market that make it possible to monitor environmental conditions for house plants. However, the market lacks an application that caters plant recommendations to users based on baseline environmental conditions. This application aims to fill this gap, providing a secure, simple way to collect data remotely pertaining to the light, temperature, and humidity at a specific location. These environmental indicators can then be used to customize plant recommendations for each user.
+There are many kits available on the market that make it possible to monitor environmental conditions for house plants. However, the market lacks an application that caters plant recommendations to users based on baseline environmental conditions. This application aims to fill this gap, providing a secure, simple way to collect data remotely pertaining to the light, temperature, and humidity at a specific location. These environmental indicators can then be used to customize plant recommendations for each user.
 
 ## VERSION 1.0.0
 
