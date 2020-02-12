@@ -150,4 +150,19 @@ describe('auth and user routes', () => {
         });
       });
   });
+
+  it('can verify a logged in user', async() => {
+    const user = await getUser({ email: 'user0@tess.com' });
+    return userAgent
+      .get('/api/v1/auth/verify')
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          email: user.email,
+          role: 'user',
+          myPis: user.myPis,
+          __v: 0
+        });
+      });
+  });
 });
