@@ -1,15 +1,18 @@
 [
   {
     '$addFields': {
-      'ISODate': {
+      'datetime': {
         '$dateFromString': {
-          'dateString': '$datetime'
+          'dateString': '$piTimeStamp'
         }
-      }
+      },
+      'temperature': '$data.temperature',
+      'humidity': '$data.humidity',
+      'light': '$data.light'
     }
   }, {
     '$group': {
-      '_id': '$ISODate',
+      '_id': '$datetime',
       'items': {
         '$push': '$$ROOT'
       }
@@ -29,30 +32,68 @@
   }, {
     '$project': {
       '_id': 0,
-      'ISODate': 1,
       'light': 1,
       'temperature': 1,
       'humidity': 1,
       'hour': {
-        '$hour': '$ISODate'
+        '$hour': '$datetime'
+      },
+      'dayOfYear': {
+        '$dayOfYear': '$datetime'
+      },
+      'datetime': 1
+    }
+  }, {
+    '$group': {
+      '_id': '$hour',
+      'maxLight': {
+        '$max': '$light'
+      },
+      'minLight': {
+        '$min': '$light'
+      },
+      'avgLight': {
+        '$avg': '$light'
+      },
+      'stdDeviationLight': {
+        '$stdDevPop': '$light'
+      },
+      'maxTemperature': {
+        '$max': '$temperature'
+      },
+      'minTemperature': {
+        '$min': '$temperature'
+      },
+      'avgTemperature': {
+        '$avg': '$temperature'
+      },
+      'stdDeviationTemperature': {
+        '$stdDevPop': '$temperature'
+      },
+      'maxHumidity': {
+        '$max': '$humidity'
+      },
+      'minHumidity': {
+        '$min': '$humidity'
+      },
+      'avgHumidity': {
+        '$avg': '$humidity'
+      },
+      'stdDeviationHumidity': {
+        '$stdDevPop': '$humidity'
       }
     }
   }, {
-    '$limit': 100
+    '$sort': {
+      '_id': 1
+    }
   }, {
-    '$bucket': {
-      'groupBy': '$hour',
-      'boundaries': [
-        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24
-      ],
-      'default': 'Other',
-      'output': {
-        'data': {
-          '$push': {
-            'light': '$light'
-          }
-        }
-      }
+    '$addFields': {
+      'hour': '$_id'
+    }
+  }, {
+    '$project': {
+      '_id': 0
     }
   }
-];
+]

@@ -1,15 +1,19 @@
-[
+
+const agg = [
   {
     '$addFields': {
-      'ISODate': {
+      'datetime': {
         '$dateFromString': {
-          'dateString': '$datetime'
+          'dateString': '$piTimeStamp'
         }
-      }
+      },
+      'temperature': '$data.temperature',
+      'humidity': '$data.humidity',
+      'light': '$data.light'
     }
   }, {
     '$group': {
-      '_id': '$ISODate',
+      '_id': '$datetime',
       'items': {
         '$push': '$$ROOT'
       }
@@ -29,16 +33,16 @@
   }, {
     '$project': {
       '_id': 0,
-      'ISODate': 1,
       'light': 1,
       'temperature': 1,
       'humidity': 1,
       'hour': {
-        '$hour': '$ISODate'
+        '$hour': '$datetime'
       },
       'dayOfYear': {
-        '$dayOfYear': '$ISODate'
-      }
+        '$dayOfYear': '$datetime'
+      },
+      'datetime': 1
     }
   }, {
     '$group': {
@@ -92,5 +96,5 @@
     '$project': {
       '_id': 0
     }
-  }, {}
+  }
 ];
